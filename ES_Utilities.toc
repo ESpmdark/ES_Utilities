@@ -1,0 +1,7 @@
+## Interface: 90002
+## Title: ES_Utilities
+## Author: Elêssar 
+## Notes: Public functions
+## Version: 1.0.0
+
+ES_Utilities.lua
