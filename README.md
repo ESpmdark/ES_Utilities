@@ -69,7 +69,9 @@ NB: Event only triggers if the unit is in your own group.
 
 [Example WeakAura](https://wago.io/asOal1H-H)
 
-This aura displays a covenant symbol on partyframes (and raidframes, if enabled in custom options).
+Displaying a covenant symbol on partyframes (and raidframes, if enabled in custom options), if the unit is tracked by this addon.
+
+No symbol if missing. Will however trigger an update in the weakaura once the unit has used a trackable spell, determining its covenant.
 
 
 
