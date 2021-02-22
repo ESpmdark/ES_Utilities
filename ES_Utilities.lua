@@ -1,8 +1,104 @@
-local ESU_Frame = CreateFrame("Frame","ES_Utilities", UIParent)
+ES_Utilities = LibStub("AceAddon-3.0"):NewAddon("ES_Utilities", "AceEvent-3.0")
+local ESU_Frame = CreateFrame("Frame","ESU_Frame_Timer", UIParent)
 local ESU_GUIDPlayers = {}
 local ESU_GUIDPets = {}
 local ESU_Timer = 0
 local ESU_TimerP = 0
+ESUTIL_DB = {}
+
+local covSpells = {
+	-- Signature Abilities
+	[324739] = 1,	-- Summon Steward
+	[177278] = 1,	-- Phial of Serenity
+	[300728] = 2,	-- Door of Shadows
+	[310143] = 3,	-- Soulshape
+	[324701] = 3,	-- Flicker
+	[324631] = 4,	-- Fleshcraft
+	
+	-- Warrior
+	[307865] = 1,
+	[330334] = 2,
+	[317488] = 2,
+	[330325] = 2,
+	[325886] = 3,
+	[324143] = 4,
+	
+	-- Paladin
+	[304971] = 1,
+	[316958] = 2,
+	[328282] = 3,
+	[328620] = 3,
+	[328622] = 3,
+	[328281] = 3,
+	[328204] = 4,
+	
+	-- Hunter
+	[308491] = 1,
+	[324149] = 2,
+	[328231] = 3,
+	[325028] = 4,
+	
+	-- Rogue
+	[323547] = 1,
+	[323654] = 2,
+	[328305] = 3,
+	[328547] = 4,
+	
+	-- Priest
+	[325013] = 1,
+	[323673] = 2,
+	[327661] = 3,
+	[324724] = 4,
+	
+	-- Death Knight
+	[312202] = 1,
+	[311648] = 2,
+	[324128] = 3,
+	[315443] = 4,
+	
+	-- Shaman
+	[324519] = 1,
+	[324386] = 1,
+	[320674] = 2,
+	[328923] = 3,
+	[326059] = 4,
+	
+	-- Mage
+	[307443] = 1,
+	[314793] = 2,
+	[314791] = 3,
+	[324220] = 4,
+	
+	-- Warlock
+	[312321] = 1,
+	[321792] = 2,
+	[325640] = 3,
+	[325289] = 4,
+	
+	-- Monk
+	[310454] = 1,
+	[326860] = 2,
+	[327104] = 3,
+	[325216] = 4,
+	
+	-- Druid
+	[338142] = 1,
+	[326462] = 1,
+	[326446] = 1,
+	[338035] = 1,
+	[338018] = 1,
+	[338411] = 1,
+	[326434] = 1,
+	[323546] = 2,
+	[323764] = 3,
+	[325727] = 4,
+	
+	-- Demon Hunter
+	[306830] = 1,
+	[317009] = 2,
+	[323639] = 3,
+	[329554] = 4,
+}
 
 local function UpdatePet(owner)
 	local unit
@@ -113,37 +209,63 @@ local function PopulateGUID()
     end 
 end
 
-ESU_Frame:RegisterEvent("GROUP_FORMED")
-ESU_Frame:RegisterEvent("GROUP_JOINED")
-ESU_Frame:RegisterEvent("GROUP_LEFT")
-ESU_Frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-ESU_Frame:RegisterEvent("RAID_ROSTER_UPDATE")
-ESU_Frame:RegisterEvent("GROUP_ROSTER_UPDATE")
-ESU_Frame:RegisterEvent("UNIT_PET")
-local events = {
-	["RAID_ROSTER_UPDATE"] = true,
-	["GROUP_ROSTER_UPDATE"] = true,
-	["PLAYER_ENTERING_WORLD"] = true,
-	["GROUP_FORMED"] = true,
-	["GROUP_JOINED"] = true,
-	["GROUP_LEFT"] = true
-}
-local function ESU_Frame_eventHandler(self, event, owner, ...)
-	if events[event] then
-		PopulateGUID()
-	elseif event == "UNIT_PET" then
-		UpdatePet(owner)
+function ES_Utilities:Handler1(event, ...)
+	PopulateGUID()
+end
+
+function ES_Utilities:Handler2(event, ...)
+	UpdatePet(...)
+end
+
+local CLEU = CombatLogGetCurrentEventInfo
+local UFN = UnitFullName
+function ES_Utilities:Handler3(event, ...)
+	local _, subevent, _, sourceGUID, _, _, _, _, _, _, _, spellId = CLEU()
+	if subevent == "SPELL_CAST_SUCCESS" and C_PlayerInfo.GUIDIsPlayer(sourceGUID)then
+		if covSpells[spellId] then
+			local _, _, _, _, _, name, realm = GetPlayerInfoByGUID(sourceGUID)
+			if (realm == "") or not realm then
+				local _, playerRealm = UFN("player")
+				realm = playerRealm
+			end
+			if not ESUTIL_DB["cov"][realm] then ESUTIL_DB["cov"][realm] = {} end
+			if not ESUTIL_DB["cov"][realm][name] then --New entry
+				ESUTIL_DB["cov"][realm][name] = covSpells[spellId]
+				if IsGUIDInGroup(sourceGUID) then
+					WeakAuras.ScanEvents("ESUTILITIES_WA_COVENANTUPDATE",true)
+				end
+			elseif not ESUTIL_DB["cov"][realm][name] == covSpells[spellId] then --Update entry
+				ESUTIL_DB["cov"][realm][name] = covSpells[spellId]
+				if IsGUIDInGroup(sourceGUID) then
+					WeakAuras.ScanEvents("ESUTILITIES_WA_COVENANTUPDATE",true)
+				end
+			end
+		end
 	end
 end
-ESU_Frame:SetScript("OnEvent", ESU_Frame_eventHandler)
 
---## Create a throttled "every frame" event for weakaura triggers ##
+function ES_Utilities:OnInitialize()
+	if not ESUTIL_DB["cov"] then ESUTIL_DB["cov"] = {} end
+	ES_Utilities:RegisterEvent("RAID_ROSTER_UPDATE", "Handler1")
+	ES_Utilities:RegisterEvent("GROUP_ROSTER_UPDATE", "Handler1")
+	ES_Utilities:RegisterEvent("PLAYER_ENTERING_WORLD", "Handler1")
+	ES_Utilities:RegisterEvent("GROUP_FORMED", "Handler1")
+	ES_Utilities:RegisterEvent("GROUP_JOINED", "Handler1")
+	ES_Utilities:RegisterEvent("GROUP_LEFT", "Handler1")
+	ES_Utilities:RegisterEvent("UNIT_PET", "Handler2")
+	ES_Utilities:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "Handler3")
+end
+
+--------------
+-- Loop Timer:
+--------------
 local function ESU_Frame_UpdateLoop_Function(self,elapsed)
     ESU_Timer = ESU_Timer + elapsed
 	if ESU_TimerP >= 20 then
 		CheckPendingGUID()
+		ESU_TimerP = 0
 	end
-    if ESU_Timer >= 0.1 then
+    if ESU_Timer >= 0.1 then -- Throttled event for weakaura triggers. Dont have to use "every frame" check.
 		ESU_TimerP = ESU_TimerP + 1
 		WeakAuras.ScanEvents("ESUTILITIES_WA_EVENT",true)
         ESU_Timer = 0
@@ -186,3 +308,28 @@ function ESUtil_GetRole(role) -- TANK, HEALER, DAMAGER, NONE
 	end
 	return rt
 end
+
+function ESUtil_GetCovenant(unit)
+	local covRef = {
+		[1] = "Kyrian",
+		[2] = "Venthyr",
+		[3] = "Night Fae",
+		[4] = "Necrolord"
+	}
+	local name, realm = UnitFullName(unit)
+	if (realm == "") or not realm then
+		local _, playerRealm = UFN("player")
+		realm = playerRealm
+	end
+	if ESUTIL_DB["cov"][realm] then
+		local uCov = ESUTIL_DB["cov"][realm][name]
+		if uCov and covRef[uCov] then
+			return covRef[uCov]
+		else
+			return false
+		end
+	else
+		return false
+	end
+end
+
