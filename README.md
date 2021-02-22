@@ -15,21 +15,7 @@ Hosting it here so they can more easily get updates if I make any alterations.
 - For situations where you only have the GUID, but would like to lookup the unitId (etc)
 ! Only has lookup for units in your group/raid. Or when solo, yourself and pet.
 
-
-Usage:
-
-GUID = "PLAYERS"
-
-returns only players in your group.
-
-GUID = "PETS"
-
-returns only pets in your group.
-
-GUID = GUID
-
-returns that unit, if it exists.
-
+[GUID](https://wow.gamepedia.com/GUID)
 
 Example:
 
@@ -39,9 +25,21 @@ Example:
        ["name"] = "Classcolored UnitName"
     }
 
+Usage:
+
 local unit = ESUtil_GetUnit(GUID).uid
 
+GUID = "PLAYERS"
 
+returns all players in your group.
+
+GUID = "PETS"
+
+returns all pets in your group.
+
+GUID = GUID
+
+returns that unit, if it exists.
 
 ### ESUtil_GetRole(ROLE)
 
