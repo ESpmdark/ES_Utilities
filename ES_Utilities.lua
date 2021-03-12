@@ -268,8 +268,7 @@ local function ESUtil_SlashHandler(arg)
 				count = count + 1
 			end
 		end
-		if count > 1000 then count = count / 1000 end
-		print('|cff6495edES_Utilities:|r You have covenant-data for |cffffc800' .. count .. '|r characters.')
+		print('|cff6495edES_Utilities:|r You have covenant-data for |cffffc800' .. BreakUpLargeNumbers(count) .. '|r characters.')
 	else
 		print('|cff6495edES_Utilities:|r Available slash commands:')
 		print('|cffffc800/esutil count :|r Prints the ammount of unique characters in database.')
