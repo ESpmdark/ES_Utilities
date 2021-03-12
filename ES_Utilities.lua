@@ -221,7 +221,7 @@ local CLEU = CombatLogGetCurrentEventInfo
 local UFN = UnitFullName
 function ES_Utilities:Handler3(event, ...)
 	local _, subevent, _, sourceGUID, _, _, _, _, _, _, _, spellId = CLEU()
-	if subevent == "SPELL_CAST_SUCCESS" and C_PlayerInfo.GUIDIsPlayer(sourceGUID)then
+	if subevent == "SPELL_CAST_SUCCESS" and C_PlayerInfo.GUIDIsPlayer(sourceGUID) then
 		if covSpells[spellId] then
 			local _, _, _, _, _, name, realm = GetPlayerInfoByGUID(sourceGUID)
 			if (realm == "") or not realm then
@@ -234,7 +234,7 @@ function ES_Utilities:Handler3(event, ...)
 				if IsGUIDInGroup(sourceGUID) then
 					WeakAuras.ScanEvents("ESUTILITIES_WA_COVENANTUPDATE",true)
 				end
-			elseif not ESUTIL_DB["cov"][realm][name] == covSpells[spellId] then --Update entry
+			elseif not (ESUTIL_DB["cov"][realm][name] == covSpells[spellId]) then --Update entry
 				ESUTIL_DB["cov"][realm][name] = covSpells[spellId]
 				if IsGUIDInGroup(sourceGUID) then
 					WeakAuras.ScanEvents("ESUTILITIES_WA_COVENANTUPDATE",true)
@@ -256,6 +256,27 @@ function ES_Utilities:OnInitialize()
 	ES_Utilities:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "Handler3")
 end
 
+local function ESUtil_SlashHandler(arg)
+	if strlower(arg) == "reset" then
+		ESUTIL_DB["cov"] = nil
+		ESUTIL_DB["cov"] = {}
+		print('|cff6495edES_Utilities:|r Covenant data has been |cffff4040erased|r.')
+	elseif strlower(arg) == "count" then
+		local count = 0
+		for realm,_ in pairs(ESUTIL_DB["cov"]) do
+			for char,_ in pairs(ESUTIL_DB["cov"][realm]) do
+				count = count + 1
+			end
+		end
+		if count > 1000 then count = count / 1000 end
+		print('|cff6495edES_Utilities:|r You have covenant-data for |cffffc800' .. count .. '|r characters.')
+	else
+		print('|cff6495edES_Utilities:|r Available slash commands:')
+		print('|cffffc800/esutil count :|r Prints the ammount of unique characters in database.')
+		print('|cffffc800/esutil reset :|r Reset/empty the database.')
+	end
+end
+
 --------------
 -- Loop Timer:
 --------------
@@ -275,7 +296,7 @@ end
 ESU_Frame:SetScript("OnUpdate", ESU_Frame_UpdateLoop_Function)
 
 --------------------
--- Public functions:
+-- Public functions: (and slash)
 --------------------
 function ESUtil_GetUnit(GUID)
 	if GUID == "PLAYERS" then
@@ -331,5 +352,10 @@ function ESUtil_GetCovenant(unit)
 	else
 		return false
 	end
+end
+
+SLASH_ESUTIL1 = "/esutil";
+SlashCmdList["ESUTIL"] = function(msg)
+	ESUtil_SlashHandler(tostring(msg) or "")
 end
 
