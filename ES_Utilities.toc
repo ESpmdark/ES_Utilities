@@ -2,7 +2,7 @@
 ## Title: ES_Utilities
 ## Author: Elêssar 
 ## Notes: Public functions
-## Version: 1.0.1
+## Version: 1.0.2
 ## OptionalDeps: Ace3
 ## SavedVariables: ESUTIL_DB
 
