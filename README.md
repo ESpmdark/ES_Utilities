@@ -78,6 +78,6 @@ No symbol if missing. Will however trigger an update in the weakaura once the un
 
 Throttled event to use for WeakAuras where you dont want to create an internal timer, and dont want to run the code on "Every Frame".
 
-Event fires every 2 seconds.
+Event fires every 10 times per second.
 
 > Eventname: "ESUTILITIES_WA_EVENT"
