@@ -1,0 +1,8 @@
+package-as: ES_Utilities
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
+move-folders:
+  ES_Utilities/ES_Utilities: ES_Utilities

@@ -1,0 +1,14 @@
+## Interface: 110205
+## Title: ES_Utilities
+## Author: Elêssar 
+## Notes: Public functions
+## Version: 1.5.9
+## IconTexture: Interface/AddOns/ES_Utilities/addon_icon
+## OptionalDeps: Ace3
+## Dependencies: WeakAuras
+## SavedVariables: ESUTIL_DB
+
+Libs\Libs.xml
+ES_Utilities.lua
+rewards.lua
+currencies.lua
