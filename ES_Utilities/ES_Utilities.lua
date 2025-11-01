@@ -38,12 +38,14 @@ end
 --
 
 -- Better Autoloot
-local lastPending = 0
 local lootPending = false
+local GetNumLootItems = GetNumLootItems
+local GetLootSlotInfo = GetLootSlotInfo
+local LootSlot = LootSlot
 local function ES_Utilities_SimpleAutoLoot()
 	local numItems = GetNumLootItems()
 	if numItems > 0 then
-		for slotIndex = numItems, 1, -1 do -- numItems, 1, -1
+		for slotIndex = 1, numItems do
 			local locked, _ = select(6, GetLootSlotInfo(slotIndex));
 			if LootSlotHasItem(slotIndex) and not locked then
 				LootSlot(slotIndex)
@@ -364,9 +366,11 @@ end
 
 function ES_Utilities:Handler5(event, isAuto, ...)
 	if not isAuto then return end
-	if GetTime() - lastPending >= 1 then
-		lastPending = GetTime()
-		lootPending = true
+	if lootPending then return end
+	lootPending = true
+	if event == "LOOT_OPENED" and LootFrame:IsVisible() then
+		-- Forcing autoloot through event if trying to autoloot something that is already opened manually
+		ES_Utilities_SimpleAutoLoot()
 	end
 end
 
@@ -466,9 +470,11 @@ function ES_Utilities_DelayedInit()
 
 		hooksecurefunc(_G["LootFrame"], "Show", function()
 			if lootPending then
-				ES_Utilities_SimpleAutoLoot()
+				C_Timer.After(0.1, function()
+					ES_Utilities_SimpleAutoLoot()
+				end)
 			end
-		end)
+		end) -- Placing main trigger on the frame showing rather than the events due to Blizz bug.
 
 		--Check if you have plumber/leatrix, and their looting settings enabled
 		local warn = false
