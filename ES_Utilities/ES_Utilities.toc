@@ -1,8 +1,8 @@
 ## Interface: 110205
 ## Title: ES_Utilities
 ## Author: Elêssar 
-## Notes: Public functions
-## Version: 1.5.9
+## Notes: A collection of small helpful modules
+## Version: @project-version@
 ## IconTexture: Interface/AddOns/ES_Utilities/addon_icon
 ## OptionalDeps: Ace3
 ## Dependencies: WeakAuras

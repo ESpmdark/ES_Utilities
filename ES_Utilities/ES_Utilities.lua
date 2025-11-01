@@ -38,16 +38,20 @@ end
 --
 
 -- Better Autoloot
+local lastPending = 0
+local lootPending = false
 local function ES_Utilities_SimpleAutoLoot()
 	local numItems = GetNumLootItems()
 	if numItems > 0 then
 		for slotIndex = numItems, 1, -1 do -- numItems, 1, -1
-			local locked, _, questID, _ = select(6, GetLootSlotInfo(slotIndex));
+			local locked, _ = select(6, GetLootSlotInfo(slotIndex));
 			if LootSlotHasItem(slotIndex) and not locked then
-				LootSlot(slotIndex);
+				LootSlot(slotIndex)
 			end
 		end
 	end
+	lootPending = false
+	CloseLoot()
 end
 --
 
@@ -62,52 +66,52 @@ local function ESUD_Frame_Init()
 	ESUD_Frame:SetSize(600,200)
 	ESUD_Frame:SetFrameStrata("DIALOG")
 	ESUD_Frame:Hide()
-	
+
 	txt1 = ESUD_Frame:CreateFontString(nil, "OVERLAY")
 	txt1:SetPoint("TOPLEFT",6,-32)
 	txt1:SetFont("Interface\\Addons\\ES_Utilities\\LiberationSans-Regular.TTF", 14, "OUTLINE")
 	txt1:SetText('')
 	txt1:SetJustifyH("LEFT")
-	
+
 	affix1 = CreateFrame("Frame", nil, ESUD_Frame)
 	affix1:SetSize(24,24)
 	affix1:SetPoint("TOPRIGHT", ESUD_Frame, "TOP", -26, -6)
 	affix1.t = affix1:CreateTexture()
 	affix1.t:SetAllPoints()
-	
+
 	affix2 = CreateFrame("Frame", nil, ESUD_Frame)
 	affix2:SetSize(24,24)
 	affix2:SetPoint("TOPRIGHT", ESUD_Frame, "TOP", -1, -6)
 	affix2.t = affix2:CreateTexture()
 	affix2.t:SetAllPoints()
-	
+
 	affix3 = CreateFrame("Frame", nil, ESUD_Frame)
 	affix3:SetSize(24,24)
 	affix3:SetPoint("TOPLEFT", ESUD_Frame, "TOP", 1, -6)
 	affix3.t = affix3:CreateTexture()
 	affix3.t:SetAllPoints()
-	
+
 	affix4 = CreateFrame("Frame", nil, ESUD_Frame)
 	affix4:SetSize(24,24)
 	affix4:SetPoint("TOPLEFT", ESUD_Frame, "TOP", 26, -6)
 	affix4.t = affix4:CreateTexture()
 	affix4.t:SetAllPoints()
-	
+
 	bTop = ESUD_Frame:CreateTexture()
 	bTop:SetPoint("BOTTOMLEFT", ESUD_Frame, "TOPLEFT", -1, -1)
 	bTop:SetPoint("TOPRIGHT", ESUD_Frame, "TOPRIGHT", 1, 1)
 	bTop:SetColorTexture(.2, .2, .2, 1)
-	
+
 	bBot = ESUD_Frame:CreateTexture()
 	bBot:SetPoint("BOTTOMLEFT", ESUD_Frame, "BOTTOMLEFT", -1, -1)
 	bBot:SetPoint("TOPRIGHT", ESUD_Frame, "BOTTOMRIGHT", 1, 1)
 	bBot:SetColorTexture(.2, .2, .2, 1)
-	
+
 	bLeft = ESUD_Frame:CreateTexture()
 	bLeft:SetPoint("BOTTOMLEFT", ESUD_Frame, "BOTTOMLEFT", -1, -1)
 	bLeft:SetPoint("TOPRIGHT", ESUD_Frame, "TOPLEFT", 1, 1)
 	bLeft:SetColorTexture(.2, .2, .2, 1)
-	
+
 	bRight = ESUD_Frame:CreateTexture()
 	bRight:SetPoint("BOTTOMLEFT", ESUD_Frame, "BOTTOMRIGHT", -1, -1)
 	bRight:SetPoint("TOPRIGHT", ESUD_Frame, "TOPRIGHT", 1, 1)
@@ -117,7 +121,7 @@ end
 
 local function ES_VaultCheck()
 	if ESUTIL_DB["chars"][pName]["curvault"] then return end
-	local rt = false
+	local rt
 	local vault = C_WeeklyRewards.GetActivities()
 	local t = {}
 	for _, slot in pairs(vault) do
@@ -133,7 +137,7 @@ local function ES_VaultCheck()
 	local p = (t[6] and ("World("..t[6]..")  ") or "")
 	local r = (t[3] and ("Raid("..t[3]..")") or "")
 	if (d..p..r) ~= "" then rt = (d..p..r) end
-	ESUTIL_DB["chars"][pName]["nextvault"] = rt
+	ESUTIL_DB["chars"][pName]["nextvault"] = rt or false
 end
 
 local function ES_TblSort(entry1, entry2)
@@ -176,27 +180,20 @@ local function ES_MplusProg()
 end
 
 local function ES_KeyFormat(isTimewalk, itemLink)
-	local rt = false
-	if isTimewalk then
-		local start,_ = string.find(itemLink, "Keystone")
-		local split = string.sub(itemLink, start)
-		local content,_ = string.split("]", split, 2)
-		rt = '|cffa335ee[' .. CreateAtlasMarkup("timerunning-glues-icon", 12, 12) .. content .. ']|r'
-	else -- Is it needed to check through the API? Might aswell parse the hyperlink and combine it all #TODO
-		local keylvl = C_MythicPlus.GetOwnedKeystoneLevel()
-		if keylvl then
-			local MapID = C_MythicPlus.GetOwnedKeystoneChallengeMapID()
-			local name1, _, _, _, _ = C_ChallengeMode.GetMapUIInfo(MapID)
-			rt = '|cffa335ee[Keystone: ' .. name1 .. " (" .. keylvl .. ")]" .. '|r'
-		end
+	local rt
+	local keylvl = C_MythicPlus.GetOwnedKeystoneLevel()
+	if keylvl then
+		local MapID = C_MythicPlus.GetOwnedKeystoneChallengeMapID()
+		local name1, _, _, _, _ = C_ChallengeMode.GetMapUIInfo(MapID)
+		rt = '|cffa335ee[Keystone: ' .. name1 .. " (" .. keylvl .. ")]" .. '|r'
 	end
-    return rt
+    return rt or false
 end
 
 local function ES_LinkKey(personal, chan)
 	if personal then
 		if ESUTIL_DB["chars"][pName]["keylink"] then
-			SendChatMessage(ESUTIL_DB["chars"][pName]["keylink"], chan)
+			C_ChatInfo.SendChatMessage(ESUTIL_DB["chars"][pName]["keylink"], chan)
 		else
 			print('|cff6495edES_Utilities:|r This character has no keystone to link!')
 		end
@@ -207,7 +204,7 @@ local function ES_LinkKey(personal, chan)
 				local cleanname, _ = strsplit("-",charN,2)
 				msg = '('..cleanname..') '..charX.keylink
 			end
-			SendChatMessage(msg, chan)
+			C_ChatInfo.SendChatMessage(msg, chan)
 		end
 	end
 end
@@ -241,8 +238,8 @@ local function ES_Utilities_GetKeystoneData()
 	return str .. str2 .. str3
 end
 
-local nextResetCheck = false
-local lastResetCheck = false
+local nextResetCheck
+local lastResetCheck
 local function ES_CheckWeeklyReset()
 	local sec = C_DateAndTime.GetSecondsUntilWeeklyReset()
 	--// Cant find an event that triggers on daily/weekly reset. Need this workaround to allow for the 4sec timer to check for us.
@@ -299,7 +296,7 @@ local function ES_Utilities_KeyUpdate()
         [151086] = true, -- Tournament
     }
 	local isTimewalk
-    local rt = false
+    local rt
     for bag = 0, NUM_BAG_SLOTS do
         local bSlots = C_Container.GetContainerNumSlots(bag)
         if not bSlots then break end
@@ -365,12 +362,12 @@ function ES_Utilities:Handler4(event, ...)
 	addon.updateCurrencies()
 end
 
-function ES_Utilities:Handler5(event, ...)
-	local modifier = {"SHIFT","CTRL","ALT"}
-	for _, v in ipairs(modifier) do
-		if IsModifiedClick(v) then return end
+function ES_Utilities:Handler5(event, isAuto, ...)
+	if not isAuto then return end
+	if GetTime() - lastPending >= 1 then
+		lastPending = GetTime()
+		lootPending = true
 	end
-	ES_Utilities_SimpleAutoLoot()
 end
 
 local function ESCreateTooltip(tt,success)
@@ -443,16 +440,6 @@ local function ESU_CheckCharEntry()
 end
 
 function ES_Utilities_DelayedInit()
-	if not ESUTIL_DB["toggles"] then
-		ESUTIL_DB["toggles"] = {
-			["vault"] = false,
-			["rewards"] = false,
-			["weekly"] = true,
-			["currency"] = false,
-			["autoloot"] = false
-		}
-	end	
-	
 	if ESUTIL_DB["toggles"]["vault"] and not PlayerIsTimerunning() then
 		if not C_AddOns.IsAddOnLoaded("Blizzard_WeeklyRewards") then
 			C_AddOns.LoadAddOn("Blizzard_WeeklyRewards")
@@ -463,28 +450,26 @@ function ES_Utilities_DelayedInit()
 		end
 		greatVault_Init()
 	end
-	
+
 	if ESUTIL_DB["toggles"]["rewards"] and not PlayerIsTimerunning() then
 		addon.rewardFrame_Init()
 	end
-	
+
 	if ESUTIL_DB["toggles"]["currency"] and not PlayerIsTimerunning() then
 		addon.ESUC_Frame_Init()
 		ES_Utilities:RegisterEvent("CURRENCY_DISPLAY_UPDATE", "Handler4")
 	end
-	
+
 	if ESUTIL_DB["toggles"]["autoloot"] then
-		if GetModifiedClick("AUTOLOOTTOGGLE") ~= "NONE" then
-			SetModifiedClick("AUTOLOOTTOGGLE", "NONE")
-		end
-		if GetCVar("autoLootDefault") ~= "0" then
-			SetCVar("autoLootDefault", "0")
-		end
-		if GetCVar("autoLootRate") ~= "0" then
-			SetCVar("autoLootRate", "0")
-		end
 		ES_Utilities:RegisterEvent("LOOT_OPENED", "Handler5")
-		
+		ES_Utilities:RegisterEvent("LOOT_READY", "Handler5") -- Blizz bug: Sometimes LOOT_OPENED doesnt fire, so need both events to ensure to bypass the bug.
+
+		hooksecurefunc(_G["LootFrame"], "Show", function()
+			if lootPending then
+				ES_Utilities_SimpleAutoLoot()
+			end
+		end)
+
 		--Check if you have plumber/leatrix, and their looting settings enabled
 		local warn = false
 		local detected = ""
@@ -498,7 +483,7 @@ function ES_Utilities_DelayedInit()
 		end
 		if warn then
 			StaticPopupDialogs["ESUTILITIES_LTPWARN"] = {
-				text = 'The following addons have\ntheir loot settings enabled.\n\n|cffFFFF00'.. detected ..'|r\nTurn the setting off to avoid\ninfrequent conflicts with\n|cffFFFF00ES_Utilities (autoloot)|r',
+				text = 'The following addons have their loot\nsettings enabled in addition to |cff00ffffES_Utilities|r.\n\n|cffFFFF00'.. detected ..'|r\nIt is adviced to only have one addon at a time using their autoloot settings.|r',
 				button1 = "Close",
 				timeout = 0,
 				whileDead = true,
@@ -508,7 +493,7 @@ function ES_Utilities_DelayedInit()
 		end
 		--
 	end
-	
+
 	if ESUTIL_DB["toggles"]["weekly"] then
 		ES_Utilities:CreateKeysFrames()
 		hooksecurefunc(_G["GameMenuFrame"], "Hide", function()
@@ -520,12 +505,12 @@ function ES_Utilities_DelayedInit()
 		if not C_AddOns.IsAddOnLoaded("Blizzard_WeeklyRewards") then
 			C_AddOns.LoadAddOn("Blizzard_WeeklyRewards")
 		end
-		if not (UnitAffectingCombat("player") or InCombatLockdown()) then
+		--if not (UnitAffectingCombat("player") or InCombatLockdown()) then
 			--ShowUIPanel(WeeklyRewardsFrame)
 			--HideUIPanel(WeeklyRewardsFrame)
-			-- Is this completely wasted crap that I added early on when I didnt understand how to ensure dataloading?
-		end
-		
+			-- Is this completely wasted crap that I added early on when I didnt understand how to ensure dataloading? Keeping it commented out for a while to see if it has any impact.
+		--end
+
 		ES_CheckWeeklyReset()
 		local pFirst,pLast = UnitFullName("player")
 		pName = pFirst .. '-' .. pLast
@@ -541,7 +526,7 @@ function ES_Utilities_DelayedInit()
 		ES_Utilities:RegisterEvent("CHAT_MSG_PARTY", "Handler3")
 		ES_Utilities:RegisterEvent("CHAT_MSG_PARTY_LEADER", "Handler3")
 		ES_Utilities:RegisterEvent("CHAT_MSG_GUILD", "Handler3")
-		
+
 		local afx = C_MythicPlus.GetCurrentAffixes()
 		local lvl = {
 			[1] = 4,
@@ -570,6 +555,16 @@ function ES_Utilities_DelayedInit()
 end
 
 function ES_Utilities:OnInitialize()
+	ESUTIL_DB = ESUTIL_DB or {}
+	if not ESUTIL_DB["toggles"] then
+		ESUTIL_DB["toggles"] = {
+			["vault"] = false,
+			["rewards"] = false,
+			["weekly"] = true,
+			["currency"] = false,
+			["autoloot"] = false
+		}
+	end	
 	C_Timer.After(3, function()
 		ES_Utilities_DelayedInit()
 		ESU_Frame:Show() -- Activate looptimer
@@ -642,9 +637,7 @@ end
 ------------------
 SLASH_ESUTILITIES1 = "/es_u";
 SlashCmdList["ESUTILITIES"] = function(msg)
-	local s1, s2 = strsplit(" ", msg, 2)
-	s2 = tonumber(s2)
-	if s1 == "vault" then
+	if msg == "vault" then
 		if ESUTIL_DB["toggles"]["vault"] then
 			ESUTIL_DB["toggles"]["vault"] = false
 			print('|cff00b4ffES_Utilities: |rDisabled GreatVaultbutton.')
@@ -653,7 +646,7 @@ SlashCmdList["ESUTILITIES"] = function(msg)
 			print('|cff00b4ffES_Utilities: |rEnabled GreatVaultbutton.')
 		end
 		print('|cff00b4ffES_Utilities: |rChanges wont take effect until you reload your interface.')
-	elseif s1 == "rewards" then
+	elseif msg == "rewards" then
 		if ESUTIL_DB["toggles"]["rewards"] then
 			ESUTIL_DB["toggles"]["rewards"] = false
 			print('|cff00b4ffES_Utilities: |rDisabled reputation reward.')
@@ -662,7 +655,7 @@ SlashCmdList["ESUTILITIES"] = function(msg)
 			print('|cff00b4ffES_Utilities: |rEnabled reputation reward.')
 		end
 		print('|cff00b4ffES_Utilities: |rChanges wont take effect until you reload your interface.')
-	elseif s1 == "weekly" then
+	elseif msg == "weekly" then
 		if ESUTIL_DB["toggles"]["weekly"] then
 			ESUTIL_DB["toggles"]["weekly"] = false
 			print('|cff00b4ffES_Utilities: |rDisabled weekly reward tracking.')
@@ -671,7 +664,7 @@ SlashCmdList["ESUTILITIES"] = function(msg)
 			print('|cff00b4ffES_Utilities: |rEnabled weekly reward tracking.')
 		end
 		print('|cff00b4ffES_Utilities: |rChanges wont take effect until you reload your interface.')
-	elseif s1 == "currency" then
+	elseif msg == "currency" then
 		if ESUTIL_DB["toggles"]["currency"] then
 			ESUTIL_DB["toggles"]["currency"] = false
 			print('|cff00b4ffES_Utilities: |rDisabled upgrade-currency.')
@@ -680,7 +673,7 @@ SlashCmdList["ESUTILITIES"] = function(msg)
 			print('|cff00b4ffES_Utilities: |rEnabled upgrade-currency.')
 		end
 		print('|cff00b4ffES_Utilities: |rChanges wont take effect until you reload your interface.')
-	elseif s1 == "autoloot" then
+	elseif msg == "autoloot" then
 		if ESUTIL_DB["toggles"]["autoloot"] then
 			ESUTIL_DB["toggles"]["autoloot"] = false
 			print('|cff00b4ffES_Utilities: |rDisabled fast autolooting.')
@@ -689,11 +682,11 @@ SlashCmdList["ESUTILITIES"] = function(msg)
 			print('|cff00b4ffES_Utilities: |rEnabled fast autolooting.')
 		end
 		print('|cff00b4ffES_Utilities: |rChanges wont take effect until you reload your interface.')
-	elseif s1 == "reset" then
+	elseif msg == "reset" then
 		table.wipe(ESUTIL_DB["chars"])
 		ESU_CheckCharEntry()
 		print('|cff00b4ffES_Utilities: |rCharacter list has been reset.')
 	else
-		print('|cff00b4ffES_Utilities: |rValid toggle-commands: \nNote: All options are disabled by default\n\n|cfffff400/es_u weekly |r(Weekly vault-reward tracking)\n|cfffff400/es_u reset |r(Reset character data)\n|cfffff400/es_u vault |r(Great vault button on ESC-menu)\n|cfffff400/es_u rewards |r(Renown and paragon reward notification on ESC-menu)\n|cfffff400/es_u currency |r(ItemUpgrade currency tracker on CharacterPanel)\n|cfffff400/es_u autoloot |r(Fully replace Blizzards buggy autolooting with a fast custom one.\n NB! If you turn this off after it has been enabled, you will need to manually enable Blizzards version in the default interface settings!)')
+		print('|cff00b4ffES_Utilities: |rValid toggle-commands: \nNote: All options are disabled by default\n\n|cfffff400/es_u weekly |r(Weekly vault-reward tracking)\n|cfffff400/es_u reset |r(Reset character data)\n|cfffff400/es_u vault |r(Great vault button on ESC-menu)\n|cfffff400/es_u rewards |r(Renown and paragon reward notification on ESC-menu)\n|cfffff400/es_u currency |r(ItemUpgrade currency tracker on CharacterPanel)\n|cfffff400/es_u autoloot |r(Faster autoloot. Also tries to bypass Blizzards bug with autoloot!)')
 	end
 end
