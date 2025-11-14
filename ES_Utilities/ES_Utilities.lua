@@ -9,18 +9,19 @@ local pName
 
 -- Add Vault-button to ESC menu
 local function greatVault_Init()
+	_G["GameMenuFrame"].Header.Text:SetText(" ") -- Button covers it partially
 	local greatVault = CreateFrame("Frame", "ES_Utilities_GreatVault", _G["GameMenuFrame"])
 	greatVault:SetFrameStrata("TOOLTIP")
-	greatVault:SetSize(80,80)
-	greatVault:SetPoint("TOP", 0, 40)
+	greatVault:SetSize(64,64)
+	greatVault:SetPoint("TOP", 0, 24)
 	greatVault.t = greatVault:CreateTexture(nil, "ARTWORK", nil, 1)
+	greatVault.t:SetAtlas("greatVault-dis-start")
 	greatVault.t:SetPoint("CENTER", 0, 0)
-	greatVault.t:SetSize(100,100)
-	greatVault.t:SetTexture("Interface\\Addons\\ES_Utilities\\img\\vault.tga")
+	greatVault.t:SetSize(80,80)
 	greatVault.t2 = greatVault:CreateTexture(nil, "ARTWORK", nil, 2)
+	greatVault.t2:SetAtlas("greatVault-frame-whole")
 	greatVault.t2:SetPoint("CENTER", 0, 0)
-	greatVault.t2:SetSize(100,100)
-	greatVault.t2:SetTexture("Interface\\Addons\\ES_Utilities\\img\\vaultGlow.tga")
+	greatVault.t2:SetSize(80,80)
 	greatVault.t2:Hide()
 	greatVault:SetScript("OnMouseDown", function()
 		if not WeeklyRewardsFrame:IsVisible() then
@@ -38,7 +39,6 @@ end
 --
 
 -- Better Autoloot
-local lootPending = false
 local GetNumLootItems = GetNumLootItems
 local GetLootSlotInfo = GetLootSlotInfo
 local LootSlot = LootSlot
@@ -47,12 +47,12 @@ local function ES_Utilities_SimpleAutoLoot()
 	if numItems > 0 then
 		for slotIndex = 1, numItems do
 			local locked, _ = select(6, GetLootSlotInfo(slotIndex));
-			if LootSlotHasItem(slotIndex) and not locked then
+			--if LootSlotHasItem(slotIndex) and not locked then
+			if not locked then
 				LootSlot(slotIndex)
 			end
 		end
 	end
-	lootPending = false
 	CloseLoot()
 end
 --
@@ -364,14 +364,9 @@ function ES_Utilities:Handler4(event, ...)
 	addon.updateCurrencies()
 end
 
-function ES_Utilities:Handler5(event, isAuto, ...)
-	if not isAuto then return end
-	if lootPending then return end
-	lootPending = true
-	if event == "LOOT_OPENED" and LootFrame:IsVisible() then
-		-- Forcing autoloot through event if trying to autoloot something that is already opened manually
-		ES_Utilities_SimpleAutoLoot()
-	end
+function ES_Utilities:Handler5(event, ...)
+	if GetCVarBool("autoLootDefault") == IsModifiedClick("AUTOLOOTTOGGLE") then return end
+	ES_Utilities_SimpleAutoLoot()
 end
 
 local function ESCreateTooltip(tt,success)
@@ -466,15 +461,6 @@ function ES_Utilities_DelayedInit()
 
 	if ESUTIL_DB["toggles"]["autoloot"] then
 		ES_Utilities:RegisterEvent("LOOT_OPENED", "Handler5")
-		ES_Utilities:RegisterEvent("LOOT_READY", "Handler5") -- Blizz bug: Sometimes LOOT_OPENED doesnt fire, so need both events to ensure to bypass the bug.
-
-		hooksecurefunc(_G["LootFrame"], "Show", function()
-			if lootPending then
-				C_Timer.After(0.1, function()
-					ES_Utilities_SimpleAutoLoot()
-				end)
-			end
-		end) -- Placing main trigger on the frame showing rather than the events due to Blizz bug.
 
 		--Check if you have plumber/leatrix, and their looting settings enabled
 		local warn = false
