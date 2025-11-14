@@ -3,7 +3,7 @@
 ## Author: Elêssar 
 ## Notes: A collection of small helpful modules
 ## Version: @project-version@
-## IconTexture: Interface/AddOns/ES_Utilities/addon_icon
+## IconTexture: Interface/AddOns/ES_Utilities/img/addon_icon
 ## OptionalDeps: Ace3
 ## Dependencies: WeakAuras
 ## SavedVariables: ESUTIL_DB
