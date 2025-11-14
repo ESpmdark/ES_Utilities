@@ -71,7 +71,7 @@ local function ESUD_Frame_Init()
 
 	txt1 = ESUD_Frame:CreateFontString(nil, "OVERLAY")
 	txt1:SetPoint("TOPLEFT",6,-32)
-	txt1:SetFont("Interface\\Addons\\ES_Utilities\\LiberationSans-Regular.TTF", 14, "OUTLINE")
+	txt1:SetFont("Interface\\Addons\\ES_Utilities\\fonts\\LiberationSans-Regular.TTF", 14, "OUTLINE")
 	txt1:SetText('')
 	txt1:SetJustifyH("LEFT")
 
