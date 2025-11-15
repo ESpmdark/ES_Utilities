@@ -4,7 +4,7 @@ local rewardFrame = CreateFrame("Frame", nil, _G["GameMenuFrame"])
 rewardFrame:SetFrameStrata("TOOLTIP")
 rewardFrame:SetSize(10,10)
 rewardFrame:SetPoint("TOPRIGHT", 10, -10)
-local rewardFrametxt, getRenownQuests, rewardFrame_OnLoad
+local rewardFrametxt, getRenownQuests, rewardFrame_OnShow
 
 local fID = {
 	-- The War Within
@@ -208,7 +208,7 @@ local rQIDs = {
 addon.rewardFrame_Init = function()
 	rewardFrametxt = rewardFrame:CreateFontString(nil, "OVERLAY")
 	rewardFrametxt:SetPoint("TOPLEFT",0,0)
-	rewardFrametxt:SetFont("Interface\\Addons\\ES_Utilities\\LiberationSans-Regular.TTF", 18, "OUTLINE")
+	rewardFrametxt:SetFont(addon.font_LiberationSansRegular, 18, "OUTLINE")
 	rewardFrametxt:SetWidth(500)
 	rewardFrametxt:SetText('')
 	rewardFrametxt:SetJustifyH("LEFT")
@@ -247,23 +247,25 @@ addon.rewardFrame_Init = function()
 		end
 		return str
 	end
-	
-	rewardFrame_OnLoad = function()
-		local rt = ""
-		local header = false
+
+	rewardFrame_OnShow = function()
+		local rt = '|cff85ff00Available \nParagon Chest:|r\n\n'
+		local show
 		for i=1,#fID do
 			local _, _, _, reward = C_Reputation.GetFactionParagonInfo(fID[i])
 			if reward then
-				if not header then header = '|cff85ff00Available \nParagon Chest:|r\n\n' end
+				if not show then show = true end
 				local data = C_Reputation.GetFactionDataByID(fID[i])
-				rt = rt .. data.name .. '\n'
+				rt = rt .. (data and data.name or "nil") .. '\n'
 			end
 		end
-		if header then
-			rt = (header or "") .. rt .. '\n\n' -- ParagonRep
+		if show then
+			rt = rt .. '\n\n' -- Make seperators for RenownQuests
+		else
+			rt = ""
 		end
 		rt = rt .. getRenownQuests()
 		rewardFrametxt:SetText(rt)
 	end
-	rewardFrame:SetScript("OnShow", rewardFrame_OnLoad)
+	rewardFrame:SetScript("OnShow", rewardFrame_OnShow)
 end

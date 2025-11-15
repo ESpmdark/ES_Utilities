@@ -24,7 +24,7 @@ local function createCurrencies(i)
 	f.t:SetAllPoints()
 	f.txt = f:CreateFontString(nil, "OVERLAY")
 	f.txt:SetPoint("LEFT", f, "RIGHT", 2, 0)
-	f.txt:SetFont("Interface\\Addons\\ES_Utilities\\LiberationSans-Regular.TTF", 16, "OUTLINE")
+	f.txt:SetFont(addon.font_LiberationSansRegular, 16, "OUTLINE")
 	
 	local ID = currencies[i]
 	local info = C_CurrencyInfo.GetCurrencyInfo(ID)

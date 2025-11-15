@@ -6,6 +6,7 @@ local ESU_Timer = 0
 local ESU_TimerP = 0
 local ESU_TimerWA = 0
 local pName
+addon.font_LiberationSansRegular = "Interface\\Addons\\ES_Utilities\\fonts\\LiberationSans-Regular.TTF"
 
 -- Add Vault-button to ESC menu
 local function greatVault_Init()
@@ -71,7 +72,7 @@ local function ESUD_Frame_Init()
 
 	txt1 = ESUD_Frame:CreateFontString(nil, "OVERLAY")
 	txt1:SetPoint("TOPLEFT",6,-32)
-	txt1:SetFont("Interface\\Addons\\ES_Utilities\\fonts\\LiberationSans-Regular.TTF", 14, "OUTLINE")
+	txt1:SetFont(addon.font_LiberationSansRegular, 14, "OUTLINE")
 	txt1:SetText('')
 	txt1:SetJustifyH("LEFT")
 
