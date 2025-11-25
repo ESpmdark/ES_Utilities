@@ -116,7 +116,7 @@ local function curencyInit()
 	for i=1,6 do
 		createCurrencies(i)
 	end
-	addon.updateCurrencies()
+	updateCurrencies()
 end
 
 local EL = CreateFrame("Frame")
