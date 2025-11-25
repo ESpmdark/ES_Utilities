@@ -1,0 +1,116 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+	<Frame name="ES_Utilities_Config" hidden="true">
+		<Size x="460" y="460"/>
+		<Anchors>
+			<Anchor point="CENTER" relativePoint="CENTER" y="120"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Background" atlas="Artifacts-DeathKnightFrost-BG">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="6" y="-6"/>
+						<Anchor point="BOTTOMRIGHT" x="-6" y="6"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="2">
+				<Texture parentKey="EdgeLeft" atlas="!GenericMetal2-NineSlice-EdgeLeft">
+					<Size x="20" y="300"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-20"/>
+						<Anchor point="BOTTOMLEFT" x="0" y="20"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="EdgeRight" atlas="!GenericMetal2-NineSlice-EdgeRight">
+					<Size x="20" y="300"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT" x="0" y="-20"/>
+						<Anchor point="BOTTOMRIGHT" x="0" y="20"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="EdgeTop" atlas="_GenericMetal2-NineSlice-EdgeTop">
+					<Size x="300" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="20" y="0"/>
+						<Anchor point="TOPRIGHT" x="-20" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="EdgeBottom" atlas="_GenericMetal2-NineSlice-EdgeBottom">
+					<Size x="300" y="20"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="20" y="0"/>
+						<Anchor point="BOTTOMRIGHT" x="-20" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="3">
+				<Texture parentKey="BottomLeftCorner" atlas="GenericMetal2-NineSlice-CornerBottomLeft">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BottomRightCorner" atlas="GenericMetal2-NineSlice-CornerBottomRight">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="TopLeftCorner" atlas="GenericMetal2-NineSlice-CornerTopLeft">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="TopRightCorner" atlas="GenericMetal2-NineSlice-CornerTopRight">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="4">
+				<Texture parentKey="Banner" atlas="GarrMission_RewardsBanner" alphaMode="ADD" alpha=".65">
+					<Size x="160" y="48"/>
+					<Anchors>
+						<Anchor point="TOP" x="0" y ="-10"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="5">
+				<FontString parentKey="Title" font="SystemFont_Med3" justifyH="CENTER" justifyV="MIDDLE" wordwrap="false" text="ES_Utilities">
+					<Size x="100" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Banner" relativePoint="CENTER" y="4"/>
+					</Anchors>
+					<Color r="0.2824" g="0.0157" b="0.0157"/>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<ScrollFrame parentKey="ScrollFrame" name="$parentScrollFrame" inherits="ScrollFrameTemplate">
+				<KeyValues>
+					<KeyValue key="scrollBarX" value="6" type="number"/>
+					<KeyValue key="scrollBarTopY" value="-4" type="number"/>
+					<KeyValue key="scrollBarBottomY" value="5" type="number"/>
+				</KeyValues>
+				<Size x="300" y="300"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-30" y="-50"/>
+					<Anchor point="BOTTOMLEFT" x="20" y="6"/>
+				</Anchors>
+				<ScrollChild>
+					<Frame parentKey="ScrollChild">
+						<Size x="300" y="200"/>
+						<Scripts>
+							<OnShow>
+								self:SetWidth(math.floor(self:GetParent():GetWidth()))
+							</OnShow>
+						</Scripts>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
+		</Frames>
+	</Frame>
+</Ui>

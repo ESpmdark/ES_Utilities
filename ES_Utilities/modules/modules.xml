@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+<Script file="autoloot.lua"/>
+<Script file="currencies.lua"/>
+<Script file="greatvaultbutton.lua"/>
+<Script file="rewards.lua"/>
+<Script file="vaultprogress.lua"/>
+<Script file="collected.lua"/>
+<Script file="idref.lua"/>
+<Script file="talkinghead.lua"/>
+<Script file="drinkmacro.lua"/>
+</Ui>

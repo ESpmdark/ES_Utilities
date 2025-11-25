@@ -1,0 +1,133 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+	<Script file="config.lua"/>
+	
+	<Frame name="ES_Utilities_Popup" mixin="ESUtilitiesPopupMixin"  toplevel="true" inherits="MainMenuFrameTemplate" parent="UIParent" hidden="true" enableMouse="true">
+		<Size x="380" y="260"/>
+		<Anchors>
+			<Anchor point="TOP" relativePoint="TOP" y="-200"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBackdrop" atlas="transfer-log-background">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="10" y="-10"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-10" y="10"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="MacroName">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.ContentArea" x="120" y="-20"/>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.ContentArea" x="-30"/>
+				</Anchors>
+				<Size x="260" y="50"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="RIGHT" relativePoint="LEFT" x="-10"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox parentKey="EditBox" inherits="InputBoxTemplate" letters="30">
+						<Size x="260" y="32"/>
+						<FontString inherits="ChatFontNormal"/>
+						<Anchors>
+							<Anchor point="LEFT"/>
+							<Anchor point="RIGHT" relativePoint="RIGHT" relativeKey="$parent"/>
+						</Anchors>
+					</EditBox>
+				</Frames>
+			</Frame>
+			<Frame parentKey="DefaultList">
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.ContentArea" x="30"/>
+					<Anchor point="TOPRIGHT" relativePoint="TOP" relativeKey="$parent.ContentArea" x="-12" y="-100"/>
+				</Anchors>
+				<Size y="100"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="BOTTOM" relativePoint="TOP" y="10"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<ScrollFrame parentKey="InputContainer" inherits="InputScrollFrameTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT"/>
+							<Anchor point="BOTTOMRIGHT"/>
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="maxLetters" value="1000" type="number"/>
+							<KeyValue key="instructions" value="List of line separated ItemIDs" type="string"/>
+							<KeyValue key="hideCharCount" value="true" type="boolean"/>
+						</KeyValues>
+					</ScrollFrame>
+				</Frames>
+			</Frame>
+			<Frame parentKey="ArenaList">
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.ContentArea" x="-30"/>
+					<Anchor point="TOPLEFT" relativePoint="TOP" relativeKey="$parent.ContentArea" x="12" y="-100"/>
+				</Anchors>
+				<Size y="100"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="BOTTOM" relativePoint="TOP" y="10"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<ScrollFrame parentKey="InputContainer" inherits="InputScrollFrameTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT"/>
+							<Anchor point="BOTTOMRIGHT"/>
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="maxLetters" value="1000" type="number"/>
+							<KeyValue key="instructions" value="List of line separated ItemIDs" type="string"/>
+							<KeyValue key="hideCharCount" value="true" type="boolean"/>
+						</KeyValues>
+					</ScrollFrame>
+				</Frames>
+			</Frame>
+			<Button parentKey="AcceptButton" inherits="UIPanelButtonTemplate" text="ACCEPT">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" relativeKey="$parent.ContentArea" x="-5" y="16"/>
+				</Anchors>
+				<Size x="64" y="26"/>
+				<Scripts>
+					<OnClick>
+						self:GetParent():OnAccept()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="CancelButton" inherits="UIPanelButtonTemplate" text="CANCEL">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOM" relativeKey="$parent.ContentArea" x="5" y="16"/>
+				</Anchors>
+				<Size x="64" y="26"/>
+				<Scripts>
+					<OnClick>
+						self:GetParent():Hide()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnShow method="OnShow"/>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</Frame>
+</Ui>

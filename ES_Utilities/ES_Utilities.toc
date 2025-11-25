@@ -1,14 +1,16 @@
 ## Interface: 110205
 ## Title: ES_Utilities
+## Category: ES_AddOns
 ## Author: Elêssar 
 ## Notes: A collection of small helpful modules
 ## Version: @project-version@
 ## IconTexture: Interface/AddOns/ES_Utilities/img/addon_icon
 ## OptionalDeps: Ace3
-## Dependencies: WeakAuras
 ## SavedVariables: ESUTIL_DB
 
 Libs\Libs.xml
-ES_Utilities.lua
-rewards.lua
-currencies.lua
+modules\modules.xml
+core.lua
+config.lua
+config.xml
+editbox.xml

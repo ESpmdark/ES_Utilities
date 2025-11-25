@@ -1,13 +1,6 @@
 local _, addon = ...
-
-local currencies = {
-	[1] = 3269, -- Catalyst
-	[2] = 3008, -- Valor
-	[3] = 3284, -- Weathered
-	[4] = 3286, -- Carved
-	[5] = 3288, -- Runed
-	[6] = 3290 -- Gilded
-}
+local isInitiated = false
+local isEnabled = false
 local ESUC_Frame
 
 local currencycounter = 0
@@ -25,8 +18,7 @@ local function createCurrencies(i)
 	f.txt = f:CreateFontString(nil, "OVERLAY")
 	f.txt:SetPoint("LEFT", f, "RIGHT", 2, 0)
 	f.txt:SetFont(addon.font_LiberationSansRegular, 16, "OUTLINE")
-	
-	local ID = currencies[i]
+	local ID = addon.currencies[i]
 	local info = C_CurrencyInfo.GetCurrencyInfo(ID)
 	local link = C_CurrencyInfo.GetCurrencyLink(ID)
 	f.t:SetTexture(info.iconFileID)
@@ -37,7 +29,6 @@ local function createCurrencies(i)
 	f:SetScript("OnLeave", function(self)
 		GameTooltip:Hide()
 	end)
-	
 	currencycounter = currencycounter + 1
 end
 
@@ -53,7 +44,7 @@ local qualColor = {
 addon.updateCurrencies = function()
 	local tbl = {}
 	for i=1,6 do
-        local curr = C_CurrencyInfo.GetCurrencyInfo(currencies[i])
+        local curr = C_CurrencyInfo.GetCurrencyInfo(addon.currencies[i])
 		local earned = curr.totalEarned or 0
 		if i == 1 then -- Catalyst
 			tbl[i] = qualColor[i] .. curr.quantity .. '|r |cffbebebe(Catalyst)|r'
@@ -93,7 +84,7 @@ addon.updateCurrencies = function()
 	end
 end
 
-addon.ESUC_Frame_Init = function()
+local function curencyInit()
 	ESUC_Frame = CreateFrame("Frame", "ES_Utilities_Currencies", _G["CharacterFrame"])
 	local txt = ESUC_Frame:CreateTexture(nil, "BACKGROUND")
 	txt:SetAllPoints()
@@ -102,7 +93,6 @@ addon.ESUC_Frame_Init = function()
 	ESUC_Frame:SetSize(130,180)
 	ESUC_Frame:SetFrameStrata("BACKGROUND")
 	ESUC_Frame:Show()
-	
 	local bTop = ESUC_Frame:CreateTexture(nil, "OVERLAY")
 	bTop:SetPoint("BOTTOMLEFT", ESUC_Frame, "TOPLEFT", -1, -1)
 	bTop:SetPoint("TOPRIGHT", ESUC_Frame, "TOPRIGHT", 1, 1)
@@ -123,7 +113,6 @@ addon.ESUC_Frame_Init = function()
 	bRight:SetPoint("BOTTOMLEFT", ESUC_Frame, "BOTTOMRIGHT", -1, -1)
 	bRight:SetPoint("TOPRIGHT", ESUC_Frame, "TOPRIGHT", 1, 1)
 	bRight:SetColorTexture(.2,.2,.2,.8)
-	
 	for i=1,6 do
 		createCurrencies(i)
 	end
@@ -131,6 +120,20 @@ addon.ESUC_Frame_Init = function()
 end
 
 
-
-
-
+addon.toggleCurrencies = function(enable)
+	if PlayerIsTimerunning() then return end
+    if enable and not isEnabled then
+		if not isInitiated then
+			curencyInit()
+			isInitiated = true
+		else
+			ESUC_Frame:Show()
+		end
+		addon.eventRegister(true,"CURRENCY_DISPLAY_UPDATE", "Handler4")
+		isEnabled = true
+	elseif not enable and isEnabled then
+		addon.eventRegister(true,"CURRENCY_DISPLAY_UPDATE", "Handler4")
+		ESUC_Frame:Hide()
+		isEnabled = false
+	end
+end
