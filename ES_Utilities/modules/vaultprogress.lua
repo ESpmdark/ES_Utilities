@@ -161,10 +161,10 @@ local function ES_LinkKey(personal, chan)
 end
 
 local function ES_Utilities_GetKeystoneData()
-	local str = 'Type "!mykeys" in party or guild chat to report your current keys\n'
+	local str = 'Type "!mykeys" in party or guild chat to report your current keys\n\n'
 	local str2 = ""
 	local str3 = ""
-	for idx,charX in pairs(ESUTIL_DB["chars"]) do
+	for idx,charX in pairs(ESUTIL_DB.chars) do
 		local left = ''
 		local right = ''
 		if idx == addon.charName then
@@ -210,7 +210,7 @@ local function checkWeeklyReset()
 	local comparison = C_DateAndTime.CompareCalendarTime(ESUTIL_DB.last, adjusted) or 2
 	if ESUTIL_DB.reset < sec  or (comparison == 1 and ESUTIL_DB.reset > sec ) then
 		local vaultcount = 0
-		for _,charX in pairs(ESUTIL_DB["chars"]) do
+		for _,charX in pairs(ESUTIL_DB.chars) do
 			charX.keystr = nil
 			charX.keynr = 0
 			charX.pending = false
