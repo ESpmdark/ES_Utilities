@@ -61,7 +61,7 @@ function ES_Utilities:Handler1(event, ...)
 		addon.VaultCheck()
 	elseif event == "CHALLENGE_MODE_COMPLETED" then
 		local valid, _ = IsInInstance()
-		ESUTIL_DB["chars"][addon.charName]["pending"] = valid
+		ESUTIL_DB.chars[addon.charName].pending = valid
 	end
 end
 
