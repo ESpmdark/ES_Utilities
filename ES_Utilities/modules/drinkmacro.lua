@@ -1,6 +1,7 @@
 local _, addon = ...
 local isInitiated = false
 local isEnabled = false
+local EL = CreateFrame("Frame")
 
 local function ESDM_ItemCheck(tbl)
 	local rt = false
@@ -48,11 +49,11 @@ end
 
 local function drinkMacroToggle(enable)
 	if enable and not isEnabled then
-		addon.eventRegister(true,"PLAYER_REGEN_ENABLED", addon.updateDrinkMacro)
+		EL:RegisterEvent("PLAYER_REGEN_ENABLED")
 		isEnabled = true
 		addon.updateDrinkMacro()
 	elseif isEnabled then
-		addon.eventRegister(false,"PLAYER_REGEN_ENABLED")
+		EL:UnregisterEvent("PLAYER_REGEN_ENABLED")
 		isEnabled = false
 	end
 end
@@ -63,3 +64,9 @@ addon.toggleDrinkingMacro = function(enable)
 	end
 	drinkMacroToggle(enable)
 end
+
+EL:SetScript("OnEvent", function(self, event, ...)
+	if event == "PLAYER_REGEN_ENABLED" then
+		addon.updateDrinkMacro()
+	end
+end)

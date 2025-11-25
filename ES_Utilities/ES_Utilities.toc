@@ -7,7 +7,6 @@
 ## IconTexture: Interface/AddOns/ES_Utilities/img/addon_icon
 ## SavedVariables: ESUTIL_DB
 
-Libs\Libs.xml
 modules\modules.xml
 core.lua
 config.lua

@@ -68,7 +68,7 @@ local function createProgressDisplay()
 	bRight:SetColorTexture(.2, .2, .2, 1)
 end
 
-addon.VaultCheck = function()
+local function vaultCheck()
 	if ESUTIL_DB.chars[addon.charName].curvault then return end
 	local rt
 	local vault = C_WeeklyRewards.GetActivities()
@@ -261,7 +261,7 @@ addon.checkCharEntry = function()
 		}
 	end
 	ES_Utilities_KeyUpdate()
-	addon.VaultCheck()
+	vaultCheck()
 	if not ESUTIL_DB.chars[addon.charName].keynr then
 		ESUTIL_DB.chars[addon.charName].keynr = 0
 		ES_MplusProg()
@@ -350,7 +350,7 @@ addon.keyBagCheck = function()
 	end
 end
 
-addon.linkKey = function(event, msg)
+local function linkKey(event, msg)
     if msg and string.lower(msg) == "!mykeys" then
         if (event == "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
             ES_LinkKey(false,"PARTY")
@@ -432,14 +432,38 @@ local function vaultProgressInit()
 	end
 end
 
-local function prepEvents(enabled)
-	if not PlayerIsTimerunning() then
-		addon.eventRegister(enabled,"WEEKLY_REWARDS_UPDATE", "Handler1")
-		addon.eventRegister(enabled,"CHALLENGE_MODE_COMPLETED", "Handler1")
+local events = {
+	"WEEKLY_REWARDS_UPDATE",
+	"CHALLENGE_MODE_COMPLETED",
+	"CHAT_MSG_PARTY",
+	"CHAT_MSG_PARTY_LEADER",
+	"CHAT_MSG_GUILD",
+}
+local EL = CreateFrame("Frame")
+EL:SetScript("OnEvent", function(self, event, msg, playername, ...)
+	if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" or event == "CHAT_MSG_GUILD" then
+		if not (addon.charName == playername) then return end
+    	linkKey(event, msg)
 	end
-	addon.eventRegister(enabled,"CHAT_MSG_PARTY", "Handler3")
-	addon.eventRegister(enabled,"CHAT_MSG_PARTY_LEADER", "Handler3")
-	addon.eventRegister(enabled,"CHAT_MSG_GUILD", "Handler3")
+	if PlayerIsTimerunning() then return end
+	if event == "WEEKLY_REWARDS_UPDATE" then
+		vaultCheck()
+	elseif event == "CHALLENGE_MODE_COMPLETED" then
+		local valid, _ = IsInInstance()
+		ESUTIL_DB.chars[addon.charName].pending = valid
+	end
+end)
+
+local function prepEvents(enabled)
+	if enabled then
+		for _,event in ipairs(events) do
+			EL:RegisterEvent(event)
+		end
+	else
+		for _,event in ipairs(events) do
+			EL:UnregisterEvent(event)
+		end
+	end
 end
 
 addon.toggleVaultProgress = function(enable)

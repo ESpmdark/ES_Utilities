@@ -1,5 +1,5 @@
 local _, addon = ...
-ES_Utilities = LibStub("AceAddon-3.0"):NewAddon("ES_Utilities", "AceEvent-3.0")
+local EL = CreateFrame("Frame") -- EventListener
 addon.font_LiberationSansRegular = "Interface\\Addons\\ES_Utilities\\fonts\\LiberationSans-Regular.TTF"
 
 local defaultDB = {
@@ -56,46 +56,6 @@ local function iterateBags()
     end
 end
 
-function ES_Utilities:Handler1(event, ...)
-	if event == "WEEKLY_REWARDS_UPDATE" then
-		addon.VaultCheck()
-	elseif event == "CHALLENGE_MODE_COMPLETED" then
-		local valid, _ = IsInInstance()
-		ESUTIL_DB.chars[addon.charName].pending = valid
-	end
-end
-
-function ES_Utilities:Handler2(event, ...)
-	iterateBags()
-	if ESUTIL_DB.toggles.drinkmacro then
-		addon.updateDrinkMacro()
-	end
-	if ESUTIL_DB.toggles.weekly then
-		addon.keyBagCheck()
-	end
-end
-
-function ES_Utilities:Handler3(event, msg, playername, ...)
-    if not (addon.charName == playername) then return end
-    addon.linkKey(event, msg)
-end
-
-function ES_Utilities:Handler4(event, ...)
-	addon.updateCurrencies()
-end
-
-function ES_Utilities:Handler5(event, ...)
-	if GetCVarBool("autoLootDefault") == IsModifiedClick("AUTOLOOTTOGGLE") then return end
-	addon.SimpleAutoLoot()
-end
-
-function ES_Utilities:Handler6(event, name, ...)
-	if name == "Blizzard_EncounterJournal" then
-		addon.eventRegister(false,"ADDON_LOADED")
-		addon.collected_EJHooks()
-	end
-end
-
 local function extractNumbers(s)
 	return s:gmatch("%d+")
 end
@@ -142,22 +102,14 @@ local function sharedBagCheck()
 	if not show then
 		if bagEventListen then
 			bagEventListen = false
-			ES_Utilities:UnregisterEvent("BAG_UPDATE_DELAYED")
+			EL:UnregisterEvent("BAG_UPDATE_DELAYED")
 		end
 	else
 		if not bagEventListen then
 			bagEventListen = true
-			ES_Utilities:RegisterEvent("BAG_UPDATE_DELAYED", "Handler2")
+			EL:RegisterEvent("BAG_UPDATE_DELAYED")
 		end
 		iterateBags()
-	end
-end
-
-addon.eventRegister = function(enable,event,handler)
-	if enable then
-		ES_Utilities:RegisterEvent(event, handler)
-	else
-		ES_Utilities:UnregisterEvent(event)
 	end
 end
 
@@ -188,7 +140,7 @@ addon.toggleSettings = function(dbkey, enabled)
 	end
 end
 
-function ES_Utilities:OnInitialize()
+local function InitializeAddon()
 	local pFirst,_ = UnitName("player")
 	addon.charName = pFirst .. '-' .. GetRealmName()
 	ESUTIL_DB = ESUTIL_DB or defaultDB
@@ -197,3 +149,19 @@ function ES_Utilities:OnInitialize()
 		addon.toggleSettings(k,v)
 	end
 end
+
+EL:SetScript("OnEvent", function(self, event, ...)
+	if event == "PLAYER_ENTERING_WORLD" then
+		EL:UnregisterEvent("PLAYER_ENTERING_WORLD")
+		InitializeAddon()
+	elseif event == "BAG_UPDATE_DELAYED" then
+		iterateBags()
+		if ESUTIL_DB.toggles.drinkmacro then
+			addon.updateDrinkMacro()
+		end
+		if ESUTIL_DB.toggles.weekly and not PlayerIsTimerunning() then
+			addon.keyBagCheck()
+		end
+	end
+end)
+EL:RegisterEvent("PLAYER_ENTERING_WORLD")

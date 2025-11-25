@@ -5,7 +5,8 @@ local isEnabled = false
 local GetNumLootItems = GetNumLootItems
 local GetLootSlotInfo = GetLootSlotInfo
 local LootSlot = LootSlot
-addon.SimpleAutoLoot = function()
+
+local function simpleAutoLoot()
 	local numItems = GetNumLootItems()
 	if numItems > 0 then
 		for slotIndex = 1, numItems do
@@ -42,15 +43,23 @@ local function autoLootInit()
 	isInitiated = true
 end
 
+local EL = CreateFrame("Frame")
+EL:SetScript("OnEvent", function(self, event, ...)
+	if event == "LOOT_OPENED" then
+		if GetCVarBool("autoLootDefault") == IsModifiedClick("AUTOLOOTTOGGLE") then return end
+		simpleAutoLoot()
+	end
+end)
+
 addon.toggleAutoLoot = function(enable)
     if enable and not isEnabled then
 		if not isInitiated then
 			autoLootInit()
 		end
-		addon.eventRegister(true,"LOOT_OPENED", "Handler5")
+		EL:RegisterEvent("LOOT_OPENED")
 		isEnabled = true
 	elseif isEnabled then
-		addon.eventRegister(false,"LOOT_OPENED")
+		EL:UnregisterEvent("LOOT_OPENED")
 		isEnabled = false
 	end
 end

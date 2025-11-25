@@ -41,7 +41,7 @@ local qualColor = {
 	[6] = '|cffff8000'
 }
 
-addon.updateCurrencies = function()
+local function updateCurrencies()
 	local tbl = {}
 	for i=1,6 do
         local curr = C_CurrencyInfo.GetCurrencyInfo(addon.currencies[i])
@@ -119,6 +119,12 @@ local function curencyInit()
 	addon.updateCurrencies()
 end
 
+local EL = CreateFrame("Frame")
+EL:SetScript("OnEvent", function(self, event, ...)
+	if event == "CURRENCY_DISPLAY_UPDATE" then
+		updateCurrencies()
+	end
+end)
 
 addon.toggleCurrencies = function(enable)
 	if PlayerIsTimerunning() then return end
@@ -129,10 +135,10 @@ addon.toggleCurrencies = function(enable)
 		else
 			ESUC_Frame:Show()
 		end
-		addon.eventRegister(true,"CURRENCY_DISPLAY_UPDATE", "Handler4")
+		EL:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 		isEnabled = true
 	elseif not enable and isEnabled then
-		addon.eventRegister(true,"CURRENCY_DISPLAY_UPDATE", "Handler4")
+		EL:UnregisterEvent("CURRENCY_DISPLAY_UPDATE")
 		ESUC_Frame:Hide()
 		isEnabled = false
 	end

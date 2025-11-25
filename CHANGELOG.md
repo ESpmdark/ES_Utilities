@@ -1,6 +1,4 @@
 # [ES_Utilities](https://github.com/ESpmdark/ES_Utilities)
 
-## Version: 2.0.0
-- Initial migration to GitHub.
-- Structure all features into modules (this includes new modules that previously were stand-alone addons).
-- Settings available in ESC -> Options -> AddOns.
+## Version: 2.0.1
+- Removed the use of libraries.

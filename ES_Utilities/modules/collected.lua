@@ -1,6 +1,7 @@
 local _, addon = ...
 local isInitiated = false
 local isEnabled = false
+local EL = CreateFrame("Frame")
 
 -- Constants
 local validsubclassID = {
@@ -12,7 +13,7 @@ local validOverrides = {["INVTYPE_BODY"]=true,["INVTYPE_HOLDABLE"]=true,["INVTYP
 
 local ESCmixin = {}
 
-addon.collected_EJHooks = function()
+local function createEJHooks()
 	hooksecurefunc("EncounterJournal_LootUpdate", function()
 		ESCmixin:UpdateEncounterJournal()
 	end)
@@ -28,9 +29,9 @@ local function collectedInit()
 	end)
 
 	if not C_AddOns.IsAddOnLoaded("Blizzard_EncounterJournal") then
-		addon.eventRegister(true,"ADDON_LOADED","Handler6")
+		EL:RegisterEvent("ADDON_LOADED")
 	else
-		addon.collected_EJHooks()
+		createEJHooks()
 	end
 end
 
@@ -255,3 +256,10 @@ addon.toggleCollected = function(enable)
 	end
 	isEnabled = enable
 end
+
+EL:SetScript("OnEvent", function(self, event, name, ...)
+	if name == "Blizzard_EncounterJournal" then
+		EL:UnregisterEvent("ADDON_LOADED")
+		createEJHooks()
+	end
+end)
