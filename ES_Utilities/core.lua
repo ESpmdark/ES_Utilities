@@ -15,6 +15,8 @@ local defaultDB = {
 		talkinghead = false,
 		talkingheadsound = false,
 		talkingheadwarmode = false,
+		extraactionbutton = false,
+		lossofcontrol = false,
 	},
 	last = {
 		monthDay = 1,
@@ -78,8 +80,8 @@ local function parseMacroentries()
 	end
 end
 
-local bagEventListen = false
-local function sharedBagCheck()
+local isBagEventActive = false
+local function sharedBagPrep()
 	local show = false
 	table.wipe(itemsToCheck)
 	if ESUTIL_DB.toggles.weekly then
@@ -100,13 +102,13 @@ local function sharedBagCheck()
 		parseMacroentries()
 	end
 	if not show then
-		if bagEventListen then
-			bagEventListen = false
+		if isBagEventActive then
+			isBagEventActive = false
 			EL:UnregisterEvent("BAG_UPDATE_DELAYED")
 		end
 	else
-		if not bagEventListen then
-			bagEventListen = true
+		if not isBagEventActive then
+			isBagEventActive = true
 			EL:RegisterEvent("BAG_UPDATE_DELAYED")
 		end
 		iterateBags()
@@ -121,7 +123,7 @@ addon.toggleSettings = function(dbkey, enabled)
 		addon.toggleRewards(enabled)
 	elseif dbkey == "weekly" then
 		if enabled then
-			sharedBagCheck()
+			sharedBagPrep()
 		end
 		addon.toggleVaultProgress(enabled)
 	elseif dbkey == "currency" then
@@ -132,11 +134,15 @@ addon.toggleSettings = function(dbkey, enabled)
 		addon.toggleCollected(enabled)
 	elseif dbkey == "drinkmacro" then
 		if enabled then
-			sharedBagCheck()
+			sharedBagPrep()
 		end
 		addon.toggleDrinkingMacro(enabled)
 	elseif dbkey == "talkinghead" then
 		addon.toggleTalkingHead(enabled)
+	elseif dbkey == "extraactionbutton" then
+		addon.toggleButtonArt(enabled)
+	elseif dbkey == "lossofcontrol" then
+		addon.toggleLossOfControl(enabled)
 	end
 end
 
@@ -144,6 +150,21 @@ local function InitializeAddon()
 	local pFirst,_ = UnitName("player")
 	addon.charName = pFirst .. '-' .. GetRealmName()
 	ESUTIL_DB = ESUTIL_DB or defaultDB
+
+	for k,v in pairs(defaultDB) do -- Handle new defaults for user
+		if not (k == "chars") then -- Ignore this one
+			if ESUTIL_DB[k] == nil then
+				ESUTIL_DB[k] = v
+			elseif type(v) == "table" then
+				for k2,v2 in pairs(v) do
+					if ESUTIL_DB[k][k2] == nil then
+						ESUTIL_DB[k][k2] = v2
+					end
+				end
+			end
+		end
+	end
+
 	addon.setupConfig()
 	for k,v in pairs(ESUTIL_DB.toggles) do
 		addon.toggleSettings(k,v)

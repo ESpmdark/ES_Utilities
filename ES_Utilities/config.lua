@@ -60,6 +60,16 @@ local description = {
             },
         },
     },
+	[9] = {
+        key = "extraactionbutton",
+        text = "Button Art",
+        tt = "Replace button art with a clean border for ExtraActionButton1 and ZoneAbility.",
+    },
+	[10] = {
+        key = "lossofcontrol",
+        text = "Simple LossOfControl",
+        tt = "Clean up Blizzards Loss of Control frame.",
+    },
 }
 
 local function createResetButton(parent)

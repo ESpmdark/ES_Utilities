@@ -9,4 +9,5 @@
 <Script file="idref.lua"/>
 <Script file="talkinghead.lua"/>
 <Script file="drinkmacro.lua"/>
+<Script file="buttonart.lua"/>
 </Ui>

@@ -161,7 +161,8 @@ local function ES_LinkKey(personal, chan)
 end
 
 local function ES_Utilities_GetKeystoneData()
-	local str = 'Type "!mykeys" in party or guild chat to report your current keys\n\n'
+	local header = 'Type "!mykeys" in party or guild chat to report your current keys\n\n'
+	local str = ""
 	local str2 = ""
 	local str3 = ""
 	for idx,charX in pairs(ESUTIL_DB.chars) do
@@ -177,7 +178,7 @@ local function ES_Utilities_GetKeystoneData()
 		end
 		if charX.nextvault then
 			if str3 == "" then
-				str3 = '\n\n|TInterface\\RAIDFRAME\\ReadyCheck-Ready.PNG:12|tNext vault:\n'
+				str3 = '\n|TInterface\\RAIDFRAME\\ReadyCheck-Ready.PNG:12|tNext vault:\n'
 			end
 			str3 = str3 .. charX.name .. '|cffbfbfbf: ' .. charX.nextvault .. '|r\n'
 		end
@@ -185,8 +186,8 @@ local function ES_Utilities_GetKeystoneData()
 			str2 = str2 .. left .. charX.name .. right .. '\n'
 		end
     end
-	if str2 ~= "" then str2 = '\n\n|TInterface\\WorldMap\\TreasureChest_64.PNG:14|t Vault Rewards |TInterface\\WorldMap\\TreasureChest_64.PNG:14|t\n' .. str2 end
-	return str .. str2 .. str3
+	if str2 ~= "" then str2 = '\n|TInterface\\WorldMap\\TreasureChest_64.PNG:14|t Vault Rewards |TInterface\\WorldMap\\TreasureChest_64.PNG:14|t\n' .. str2 end
+	return header .. str .. str2 .. str3
 end
 
 local nextResetCheck
@@ -268,6 +269,7 @@ addon.checkCharEntry = function()
 	end
 end
 
+local affixesLoaded = false
 local function updateAffixIcons(tt,success)
 	if success then
 		affix1.t:SetTexture(tt[1]["i"])
@@ -302,11 +304,12 @@ local function updateAffixIcons(tt,success)
 		affix4:SetScript("OnLeave", function(self)
 			GameTooltip:Hide()
 		end)
+		affixesLoaded = true
 	else
 		affix2.t:SetTexture("Interface\\EncounterJournal\\UI-EJ-WarningTextIcon")
 		affix2:SetScript("OnEnter", function(self)
 			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
-			GameTooltip:SetText('Could not retrieve affix data.\n\nTry reloading your interface.')
+			GameTooltip:SetText('Could not retrieve affix data.\n\nWill attempt again next time you show the display.')
 		end)
 		affix2:SetScript("OnLeave", function(self)
 			GameTooltip:Hide()
@@ -324,6 +327,21 @@ local function get_line_count(str)
 end
 
 local function displayFrame_Show()
+	if not affixesLoaded then
+		local afx = C_MythicPlus.GetCurrentAffixes()
+		if afx and (#afx >= 1) then
+			local lvl = {[1]=4,[2]=7,[3]=10,[4]=12}
+			local afDt = {[1]={t="",i=0},[2]={t="",i=0},[3]={t="",i=0},[4]={t="",i=0}}
+			for i=1,#afx do
+				local name, description, icon = C_ChallengeMode.GetAffixInfo(afx[i].id)
+				afDt[i].t = '|cffffffff' .. name .. '|r |cff00bcff(+' .. lvl[i] .. ')|r\n\n' .. description
+				afDt[i].i = icon
+			end
+			updateAffixIcons(afDt, true)
+		else
+			updateAffixIcons(false, false)
+		end
+	end
 	local txt = ES_Utilities_GetKeystoneData()
 	local count = get_line_count(txt)
 	txt1:SetText(txt)
@@ -417,19 +435,6 @@ local function vaultProgressInit()
 	--end
 	checkWeeklyReset()
 	addon.checkCharEntry()
-	local afx = C_MythicPlus.GetCurrentAffixes()
-	local lvl = {[1]=4,[2]=7,[3]=10,[4]=12}
-	local afDt = {[1]={t="",i=0},[2]={t="",i=0},[3]={t="",i=0},[4]={t="",i=0}}
-	if afx and (#afx >= 1) then
-		for i=1,#afx do
-			local name, description, icon = C_ChallengeMode.GetAffixInfo(afx[i].id)
-			afDt[i].t = '|cffffffff' .. name .. '|r |cff00bcff(+' .. lvl[i] .. ')|r\n\n' .. description
-			afDt[i].i = icon
-		end
-		updateAffixIcons(afDt, true)
-	else
-		updateAffixIcons(afDt, false)
-	end
 end
 
 local events = {
