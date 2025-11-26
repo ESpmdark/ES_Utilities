@@ -4,29 +4,26 @@ local ba_Enabled = false
 local loc_Initiated = false
 local loc_Enabled = false
 local hasAddon = false
-local EL = CreateFrame("Frame")
-local border1,border2,border3
+local border1,border2
 
 local function toggleBAart(enable)
     if enable then
         border1:SetAlpha(1)
-        border2:SetAlpha(1)
 	    ExtraActionButton1.style:SetAlpha(0)
 	    ExtraActionButton1.style:Hide()
         ZoneAbilityFrame.Style:SetAlpha(0)
 	    ZoneAbilityFrame.Style:Hide()
         if hasAddon then
-            border3:SetAlpha(1)
+            border2:SetAlpha(1)
         end
     else
         border1:SetAlpha(0)
-        border2:SetAlpha(0)
 	    ExtraActionButton1.style:SetAlpha(1)
 	    ExtraActionButton1.style:Show()
         ZoneAbilityFrame.Style:SetAlpha(1)
 	    ZoneAbilityFrame.Style:Show()
         if hasAddon then
-            border3:SetAlpha(0)
+            border2:SetAlpha(0)
         end
     end
 end
@@ -44,14 +41,38 @@ end
 
 local function skinExtraQuestButton()
     hasAddon = true
-	border3 = CreateFrame("Frame", nil, _G["ExtraQuestButton"])
-	border3:SetFrameLevel(100)
-	border3:SetPoint("CENTER",0,0)
-	border3:SetSize(56,56)
-	border3.t = border3:CreateTexture(nil, "ARTWORK")
-	border3.t:SetAllPoints()
-	border3.t:SetAtlas("loottoast-itemborder-artifact")
-	border3.t:Show()
+	border2 = CreateFrame("Frame", nil, _G["ExtraQuestButton"])
+	border2:SetFrameLevel(100)
+	border2:SetPoint("CENTER",0,0)
+	border2:SetSize(56,56)
+	border2.t = border2:CreateTexture(nil, "ARTWORK")
+	border2.t:SetAllPoints()
+	border2.t:SetAtlas("loottoast-itemborder-artifact")
+	border2.t:Show()
+end
+
+local function generateZoneAbilityBorder(frame)
+	if not frame then return end
+	if not ba_Enabled then
+		if frame.Custom then
+			frame.Custom = nil
+		end
+		return
+	end
+	if frame.Custom then return	end
+	frame.Custom = frame:CreateTexture(nil, "ARTWORK", nil, 7)
+	frame.Custom:SetPoint("CENTER",0,0)
+	frame.Custom:SetSize(56,56)
+	frame.Custom:SetAtlas("loottoast-itemborder-orange")
+	frame.Custom:Show()
+end
+
+local function checkZoneAbilities()
+	local children = {ZoneAbilityFrame.SpellButtonContainer:GetChildren()}
+	if not children then return end
+	for _,child in ipairs(children) do
+		generateZoneAbilityBorder(child)
+	end
 end
 
 local function buttonartInit()
@@ -64,24 +85,13 @@ local function buttonartInit()
 	border1.t:SetAtlas("loottoast-itemborder-blue")
 	border1.t:Show()
 
-	border2 = CreateFrame("Frame", nil, ZoneAbilityFrame.SpellButtonContainer)
-	border2:SetFrameLevel(100)
-	border2:SetPoint("CENTER",0,0)
-	border2:SetSize(56,56)
-	border2.t = border2:CreateTexture(nil, "ARTWORK")
-	border2.t:SetAllPoints()
-	border2.t:SetAtlas("loottoast-itemborder-orange")
-	border2.t:Show()
+	checkZoneAbilities()
+	hooksecurefunc(ZoneAbilityFrame.SpellButtonContainer, "SetContents" , function()
+		checkZoneAbilities()
+	end)
 
     if C_AddOns.IsAddOnLoaded("ExtraQuestButton") then
         skinExtraQuestButton()
-    else
-        EL:SetScript("OnEvent", function(self, event, name, ...)
-	        if name == "ExtraQuestButton" then
-        		EL:UnregisterEvent("ADDON_LOADED")
-		        skinExtraQuestButton()
-	        end
-        end)
 	end
 
     ba_Initiated = true
@@ -98,11 +108,11 @@ end
 
 addon.toggleButtonArt = function(enable)
     if enable and not ba_Enabled then
+		ba_Enabled = true
 		if not ba_Initiated then
 			buttonartInit()
 		end
         toggleBAart(true)
-		ba_Enabled = true
 	elseif ba_Enabled then
         toggleBAart(false)
 		ba_Enabled = false
