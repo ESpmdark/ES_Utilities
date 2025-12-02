@@ -78,7 +78,6 @@ function ESCmixin:CreateButton(parentFrame)
 end
 
 function ESCmixin:UpdateMerchantBtn(i,padding)
-    local merchantButton = _G["MerchantItem" .. i]
     local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
 	if not itemButton then return end
 	if not isEnabled then
