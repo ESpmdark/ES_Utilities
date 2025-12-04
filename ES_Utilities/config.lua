@@ -9,7 +9,7 @@ local description = {
 	[2] = {
         key = "weekly",
         text = "Vault Progress",
-        tt = "Adds a Weakaura inspired tracker to your top left screen when ESC menu is open.\n\nWill track any progress across characters, aswell as display current keystones.",
+        tt = "Adds a tracker to the top left of your screen when ESC menu is open.\n\nWill track any progress across characters, aswell as display current keystones.",
     },
 	[3] = {
         key = "rewards",
@@ -19,14 +19,14 @@ local description = {
 	        [1] = {
                 key = "renown",
                 text = "Include renown",
-                tt = "Also show any unclaimed renown reward (Crests, Valorstone etc) the current character is eligble to pick up.",
+                tt = "Also show any unclaimed renown reward for the character.\n\n(Crests, Valorstone etc)",
             },
         },
     },
 	[4] = {
         key = "currency",
         text = "Item upgrade currencies",
-        tt = "Adds a tooltip to the right of your characterpanel, displaying current seasons curriencies used for upgrading items.",
+        tt = "Adds a tooltip to the right of your characterpanel.\n\nThis tracks current season curriencies used for upgrading items.",
     },
 	[5] = {
         key = "autoloot",
@@ -41,7 +41,7 @@ local description = {
 	[7] = {
         key = "drinkmacro",
         text = "Drink Macro",
-        tt = "Will automate a macro of your chosing to adapt to your situation and chose available consumables (including mage food).",
+        tt = "Will automate a macro of your chosing to use available consumables.\n\nMage Food is included by default.",
     },
 	[8] = {
         key = "talkinghead",
