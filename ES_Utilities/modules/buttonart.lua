@@ -41,14 +41,10 @@ end
 
 local function skinExtraQuestButton()
     hasAddon = true
-	border2 = CreateFrame("Frame", nil, _G["ExtraQuestButton"])
-	border2:SetFrameLevel(100)
-	border2:SetPoint("CENTER",0,0)
-	border2:SetSize(56,56)
-	border2.t = border2:CreateTexture(nil, "ARTWORK")
-	border2.t:SetAllPoints()
-	border2.t:SetAtlas("loottoast-itemborder-artifact")
-	border2.t:Show()
+	border2 = _G["ExtraQuestButton"]:CreateTexture(nil, "ARTWORK", nil, 7)
+	border2:SetAllPoints()
+	border2:SetTexture("Interface\\AddOns\\ES_Utilities\\img\\border_ExtraQuestButton.tga")
+	border2:Show()
 end
 
 local function generateZoneAbilityBorder(frame)
@@ -61,9 +57,8 @@ local function generateZoneAbilityBorder(frame)
 	end
 	if frame.Custom then return	end
 	frame.Custom = frame:CreateTexture(nil, "ARTWORK", nil, 7)
-	frame.Custom:SetPoint("CENTER",0,0)
-	frame.Custom:SetSize(56,56)
-	frame.Custom:SetAtlas("loottoast-itemborder-orange")
+	frame.Custom:SetAllPoints()
+	frame.Custom:SetTexture("Interface\\AddOns\\ES_Utilities\\img\\border_ZoneAbility.tga")
 	frame.Custom:Show()
 end
 
@@ -76,14 +71,10 @@ local function checkZoneAbilities()
 end
 
 local function buttonartInit()
-	border1 = CreateFrame("Frame", nil, ExtraActionButton1)
-	border1:SetFrameLevel(100)
-	border1:SetPoint("CENTER",0,0)
-	border1:SetSize(56,56)
-	border1.t = border1:CreateTexture(nil, "ARTWORK")
-	border1.t:SetAllPoints()
-	border1.t:SetAtlas("loottoast-itemborder-blue")
-	border1.t:Show()
+	border1 = ExtraActionButton1:CreateTexture(nil, "ARTWORK", nil, 7)
+	border1:SetAllPoints()
+	border1:SetTexture("Interface\\AddOns\\ES_Utilities\\img\\border_ExtraActionButton.tga")
+	border1:Show()
 
 	checkZoneAbilities()
 	hooksecurefunc(ZoneAbilityFrame.SpellButtonContainer, "SetContents" , function()
