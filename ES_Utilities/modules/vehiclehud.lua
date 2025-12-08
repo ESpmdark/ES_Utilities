@@ -199,7 +199,7 @@ function ES_Utilities_VehicleHUD_mixin:OnAccept()
 end
 
 local function InitializeFrames()
-	main = CreateFrame("Frame","ES_VehicleHUD", UIParent)
+	main = CreateFrame("Frame","ES_Utilities_VehicleHUD", UIParent)
 	main:Hide()
 
 	loop = CreateFrame("Frame",nil, UIParent)
@@ -297,7 +297,7 @@ local function InitializeFrames()
 		main[i].overlay:Hide()
 		local border = main[i]:CreateTexture(nil, "BACKGROUND", nil, 3)
 		border:SetAllPoints()
-		border:SetTexture("Interface\\AddOns\\ES_VehicleHUD\\border_VehicleButton.tga")
+		border:SetTexture("Interface\\AddOns\\ES_Utilities\\img\\border_VehicleButton.tga")
 		border:Show()
 		main[i]:SetScript("OnEnter", function(self)
 				GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
