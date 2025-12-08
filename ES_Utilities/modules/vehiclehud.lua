@@ -204,6 +204,7 @@ local function InitializeFrames()
 
 	loop = CreateFrame("Frame",nil, UIParent)
 	loop:SetScript("OnUpdate", function(self,elapsed)
+		if editmode then return end
 		delay = delay + elapsed
 		if delay >= 0.1 then
 			delay = 0
