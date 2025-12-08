@@ -363,6 +363,7 @@ addon.toggleVehicleEdit = function(enable)
 		updateShownState()
 	elseif not enable and editmode then
 		editmode = false
+		ES_Utilities_VHedit:Hide()
 		updateShownState()
 	end
 end
