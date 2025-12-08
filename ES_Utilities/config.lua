@@ -70,6 +70,18 @@ local description = {
         text = "Simple LossOfControl",
         tt = "Clean up Blizzards Loss of Control frame.",
     },
+	[11] = {
+        key = "vehiclehud",
+        text = "Vehicle HUD",
+        tt = "A minimalist HUD that shows your current vehicle/possess abilities.\n\nGood for situations where you are hiding all bars but still need to know what actions you have.",
+        child = {
+	        [1] = {
+                key = "vehicleedit",
+                text = "EditMode",
+                tt = "Enable editing of the frame.",
+            },
+        },
+    },
 }
 
 local function createResetButton(parent)

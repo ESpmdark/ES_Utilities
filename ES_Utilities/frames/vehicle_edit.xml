@@ -1,0 +1,164 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+	<Frame name="ES_Utilities_VHedit" mixin="ES_Utilities_VehicleHUD_mixin"  inherits="MainMenuFrameTemplate" clampedToScreen="true" hidden="true" parent="UIParent" enableMouse="true">
+		<Size x="200" y="180"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBackdrop" atlas="transfer-log-background">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="10" y="-10"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-10" y="10"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString parentKey="PositionText" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP" y="-80"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="Scale">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.ContentArea" x="30" y="-30"/>
+					<Anchor point="TOPRIGHT" relativePoint="TOP" relativeKey="$parent.ContentArea" x="-10"/>
+				</Anchors>
+				<Size x="260" y="50"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="TOP" y="0"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox parentKey="EditBox" inherits="InputBoxTemplate" mixin="ES_Utilities_VehicleHUD_mixin" letters="5" autoFocus="false">
+						<Size x="260" y="32"/>
+						<FontString inherits="ChatFontNormal"/>
+						<Anchors>
+							<Anchor point="LEFT"/>
+							<Anchor point="RIGHT" relativePoint="RIGHT" relativeKey="$parent"/>
+						</Anchors>
+						<Scripts>
+							<OnEnterPressed>
+								self:OnEnterPressed("scale")
+							</OnEnterPressed>
+						</Scripts>
+					</EditBox>
+				</Frames>
+			</Frame>
+			<Frame parentKey="IconSize">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOP" relativeKey="$parent.ContentArea" x="10" y="-30"/>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.ContentArea" x="-30"/>
+				</Anchors>
+				<Size x="260" y="50"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="TOP" y="0"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox parentKey="EditBox" inherits="InputBoxTemplate" mixin="ES_Utilities_VehicleHUD_mixin" letters="5" autoFocus="false">
+						<Size x="260" y="32"/>
+						<FontString inherits="ChatFontNormal"/>
+						<Anchors>
+							<Anchor point="LEFT"/>
+							<Anchor point="RIGHT" relativePoint="RIGHT" relativeKey="$parent"/>
+						</Anchors>
+						<Scripts>
+							<OnEnterPressed>
+								self:OnEnterPressed("iconsize")
+							</OnEnterPressed>
+						</Scripts>
+					</EditBox>
+				</Frames>
+			</Frame>
+			<Frame parentKey="xPos">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.ContentArea" x="45" y="-80"/>
+					<Anchor point="TOPRIGHT" relativePoint="TOP" relativeKey="$parent.ContentArea" x="-10"/>
+				</Anchors>
+				<Size x="260" y="50"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="RIGHT" relativePoint="LEFT" x="-6"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox parentKey="EditBox" inherits="InputBoxTemplate" mixin="ES_Utilities_VehicleHUD_mixin" letters="5" autoFocus="false">
+						<Size x="260" y="32"/>
+						<FontString inherits="ChatFontNormal"/>
+						<Anchors>
+							<Anchor point="LEFT"/>
+							<Anchor point="RIGHT" relativePoint="RIGHT" relativeKey="$parent"/>
+						</Anchors>
+						<Scripts>
+							<OnEnterPressed>
+								self:OnEnterPressed("xPos")
+							</OnEnterPressed>
+						</Scripts>
+					</EditBox>
+				</Frames>
+			</Frame>
+			<Frame parentKey="yPos">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOP" relativeKey="$parent.ContentArea" x="25" y="-80"/>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.ContentArea" x="-30"/>
+				</Anchors>
+				<Size x="260" y="50"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="RIGHT" relativePoint="LEFT" x="-6"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox parentKey="EditBox" inherits="InputBoxTemplate" mixin="ES_Utilities_VehicleHUD_mixin" letters="5" autoFocus="false">
+						<Size x="260" y="32"/>
+						<FontString inherits="ChatFontNormal"/>
+						<Anchors>
+							<Anchor point="LEFT"/>
+							<Anchor point="RIGHT" relativePoint="RIGHT" relativeKey="$parent"/>
+						</Anchors>
+						<Scripts>
+							<OnEnterPressed>
+								self:OnEnterPressed("yPos")
+							</OnEnterPressed>
+						</Scripts>
+					</EditBox>
+				</Frames>
+			</Frame>
+			<Button parentKey="AcceptButton" inherits="UIPanelButtonTemplate" text="Lock">
+				<Anchors>
+					<Anchor point="BOTTOM" relativePoint="BOTTOM" relativeKey="$parent.ContentArea" x="0" y="16"/>
+				</Anchors>
+				<Size x="64" y="26"/>
+				<Scripts>
+					<OnClick>
+						self:GetParent():OnAccept()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnShow method="OnShow"/>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</Frame>
+</Ui>

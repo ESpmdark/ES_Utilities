@@ -17,6 +17,8 @@ local defaultDB = {
 		talkingheadwarmode = false,
 		extraactionbutton = false,
 		lossofcontrol = false,
+		vehiclehud = false,
+		vehicleedit = false,
 	},
 	last = {
 		monthDay = 1,
@@ -33,6 +35,12 @@ local defaultDB = {
 		defaults = "",
 		arena = ""
 	},
+	vehiclehud = {
+		xPos = 0,
+		yPos = 0,
+		scale = 1,
+		iconsize = 42
+	}
 }
 addon.CombatCheck = function()
 	if UnitAffectingCombat("player") or InCombatLockdown() then return true end
@@ -143,6 +151,10 @@ addon.toggleSettings = function(dbkey, enabled)
 		addon.toggleButtonArt(enabled)
 	elseif dbkey == "lossofcontrol" then
 		addon.toggleLossOfControl(enabled)
+	elseif dbkey == "vehiclehud" then
+		addon.toggleVehicleHUD(enabled)
+	elseif dbkey == "vehicleedit" then
+		addon.toggleVehicleEdit(enabled)
 	end
 end
 

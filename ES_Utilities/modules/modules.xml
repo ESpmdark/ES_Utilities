@@ -10,4 +10,5 @@
 <Script file="talkinghead.lua"/>
 <Script file="drinkmacro.lua"/>
 <Script file="buttonart.lua"/>
+<Script file="vehiclehud.lua"/>
 </Ui>

@@ -7,8 +7,9 @@
 ## IconTexture: Interface/AddOns/ES_Utilities/img/addon_icon
 ## SavedVariables: ESUTIL_DB
 
-modules\modules.xml
 core.lua
 config.lua
-config.xml
-editbox.xml
+modules\modules.xml
+frames\vehicle_edit.xml
+frames\config.xml
+frames\editbox.xml
