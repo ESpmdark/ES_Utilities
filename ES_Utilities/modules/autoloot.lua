@@ -58,7 +58,7 @@ addon.toggleAutoLoot = function(enable)
 		end
 		EL:RegisterEvent("LOOT_OPENED")
 		isEnabled = true
-	elseif isEnabled then
+	elseif not enable and isEnabled then
 		EL:UnregisterEvent("LOOT_OPENED")
 		isEnabled = false
 	end
