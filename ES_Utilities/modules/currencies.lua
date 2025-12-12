@@ -1,9 +1,7 @@
 local _, addon = ...
-local isInitiated = false
-local isEnabled = false
-local ESUC_Frame
-
+local isInitiated,isEnabled,ESUC_Frame
 local currencycounter = 0
+
 local function createCurrencies(i)
 	local f = CreateFrame("Frame", "curr"..i)
 	f:SetSize(24,24)

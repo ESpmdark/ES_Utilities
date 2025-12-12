@@ -1,10 +1,5 @@
 local _, addon = ...
-local ba_Initiated = false
-local ba_Enabled = false
-local loc_Initiated = false
-local loc_Enabled = false
-local hasAddon = false
-local border1,border2
+local ba_Initiated,ba_Enabled,loc_Initiated,loc_Enabled,hasAddon,border1,border2
 
 local function toggleBAart(enable)
     if enable then

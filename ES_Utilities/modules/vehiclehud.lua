@@ -1,10 +1,20 @@
 local _, addon = ...
-local isInitiated = false
-local isEnabled = false
-local editmode = false
-local delay = 0
-local isVisible
-local main, loop --frames
+local isInitiated,isEnabled,editmode,isVisible,main,delayTimer
+local EL = CreateFrame("Frame")
+
+local eventList = {
+	["UPDATE_VEHICLE_ACTIONBAR"] = true,
+	["UPDATE_OVERRIDE_ACTIONBAR"] = true,
+	["UPDATE_POSSESS_BAR"] = true,
+}
+local updateEvents = {
+	["ACTION_RANGE_CHECK_UPDATE"] = true,
+	["ACTION_USABLE_CHANGED"] = true,
+	["ACTIONBAR_SLOT_CHANGED"] = true,
+	["ACTIONBAR_UPDATE_COOLDOWN"] = true,
+	["ACTIONBAR_UPDATE_STATE"] = true,
+	["ACTIONBAR_UPDATE_USABLE"] = true,
+}
 
 local ref = {
 	vehicle = { -- Priest MC and certain vehicles and questobjects
@@ -58,6 +68,10 @@ local function fetchTooltip(idx)
 end
 
 local function updateActions()
+	if delayTimer then
+		delayTimer:Cancel()
+		delayTimer = nil
+	end
 	if not ref[isVisible] then return end
 	table.wipe(activeButtons)
 	for i=1,12 do
@@ -77,8 +91,10 @@ local function updateActions()
 			if start and start > 0 then
 				main[i].cd:SetCooldown(start, dur)
 				if tostring(cText) or cText < 1 then
-					main[i].overlay:Show()
-					main[i].icon:SetDesaturated(true)
+					if dur > 1.6 then -- Dont color global cooldowns
+						main[i].overlay:Show()
+						main[i].icon:SetDesaturated(true)
+					end
 				end
 			elseif not isUsable then
 				main[i].overlay:Show()
@@ -91,8 +107,8 @@ local function updateActions()
 	end
 end
 
-local function updateDisplay(editmode)
-	if not editmode then
+local function updateDisplay(isEditmode)
+	if not isEditmode then
 		updateActions()
 	end
 	local padding = 4
@@ -136,11 +152,16 @@ local function updateShownState()
 		isVisible = nil
 	end	
 	if isVisible then
-		loop:Show()
 		main:Show()
+		updateDisplay()
+		for e,_ in pairs(updateEvents) do
+			EL:RegisterEvent(e)
+		end
 	else
-		loop:Hide()
 		main:Hide()
+		for e,_ in pairs(updateEvents) do
+			EL:UnregisterEvent(e)
+		end
 		for i=1,12 do
 			main[i]:Hide()
 		end
@@ -201,17 +222,6 @@ end
 local function InitializeFrames()
 	main = CreateFrame("Frame","ES_Utilities_VehicleHUD", UIParent)
 	main:Hide()
-
-	loop = CreateFrame("Frame",nil, UIParent)
-	loop:SetScript("OnUpdate", function(self,elapsed)
-		if editmode then return end
-		delay = delay + elapsed
-		if delay >= 0.1 then
-			delay = 0
-			updateDisplay()
-		end
-	end)
-	loop:Hide()
 
 	main.background = main:CreateTexture(nil, "BACKGROUND")
 	main.background:SetAllPoints()
@@ -313,13 +323,6 @@ local function InitializeFrames()
 	setPointandSize()
 end
 
-local eventList = {
-	["UPDATE_VEHICLE_ACTIONBAR"] = true,
-	["UPDATE_OVERRIDE_ACTIONBAR"] = true,
-	["UPDATE_POSSESS_BAR"] = true,
-}
-
-local EL = CreateFrame("Frame")
 EL:SetScript("OnEvent", function(self, event, ...)
 	if eventList[event] then
 		if HasVehicleActionBar() then
@@ -332,6 +335,13 @@ EL:SetScript("OnEvent", function(self, event, ...)
 			isVisible = nil
 		end
 		updateShownState()
+	elseif updateEvents[event] then
+		if editmode then return end
+		if delayTimer then
+			delayTimer:Cancel()
+			delayTimer = nil
+		end
+		delayTimer = C_Timer.NewTimer(0.1, function() updateDisplay() end)
 	end
 end)
 

@@ -1,12 +1,53 @@
 local _, addon = ...
-local isInitiated = false
-local isEnabled = false
+local isInitiated,isEnabled,tickerTimer,displayFrame,txt,txt1,affix1,affix2,affix3,affix4,affixesLoaded,bTop,bBot,bLeft,bRight
 
-local loopTimer = CreateFrame("Frame", nil, UIParent)
-loopTimer:Hide()
-local loopCount = 0
+local function updateAffixIcons(tt,success)
+	if success then
+		affix1.t:SetTexture(tt[1]["i"])
+		affix1:SetScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+			GameTooltip:SetText(tt[1]["t"], 1, 0.8, 0, 1, true)
+		end)
+		affix1:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
+		affix2.t:SetTexture(tt[2]["i"])
+		affix2:SetScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+			GameTooltip:SetText(tt[2]["t"], 1, 0.8, 0, 1, true)
+		end)
+		affix2:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
+		affix3.t:SetTexture(tt[3]["i"])
+		affix3:SetScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+			GameTooltip:SetText(tt[3]["t"], 1, 0.8, 0, 1, true)
+		end)
+		affix3:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
+		affix4.t:SetTexture(tt[4]["i"])
+		affix4:SetScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+			GameTooltip:SetText(tt[4]["t"], 1, 0.8, 0, 1, true)
+		end)
+		affix4:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
+		affixesLoaded = true
+	else
+		affix2.t:SetTexture("Interface\\EncounterJournal\\UI-EJ-WarningTextIcon")
+		affix2:SetScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+			GameTooltip:SetText('Could not retrieve affix data.\n\nWill attempt again next time you show the display.')
+		end)
+		affix2:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
+	end
+end
 
-local displayFrame, txt, txt1, affix1, affix2, affix3, affix4, bTop, bBot, bLeft, bRight
 local function createProgressDisplay()
 	displayFrame = CreateFrame("Frame","ES_Utilities_Display", UIParent)
 	txt = displayFrame:CreateTexture()
@@ -70,7 +111,6 @@ end
 
 local function vaultCheck()
 	if ESUTIL_DB.chars[addon.charName].curvault then return end
-	local rt
 	local vault = C_WeeklyRewards.GetActivities()
 	local t = {}
 	for _, slot in pairs(vault) do
@@ -85,19 +125,18 @@ local function vaultCheck()
 	local d = (t[1] and ("Dungeon("..t[1]..")  ") or "")
 	local p = (t[6] and ("World("..t[6]..")  ") or "")
 	local r = (t[3] and ("Raid("..t[3]..")") or "")
-	if (d..p..r) ~= "" then rt = (d..p..r) end
-	ESUTIL_DB.chars[addon.charName].nextvault = rt or false
+	ESUTIL_DB.chars[addon.charName].nextvault = ((d..p..r) ~= "") and (d..p..r) or false
 end
 
-local function ES_TblSort(entry1, entry2)
-    if ( entry1.level == entry2.level ) then
-		return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
+local function sortRuns(a, b)
+    if a.level == b.level then
+		return a.mapChallengeModeID < b.mapChallengeModeID;
 	else
-		return entry1.level > entry2.level;
+		return a.level > b.level;
 	end
 end
 
-local function ES_MplusProg()
+local function checkmplusProg()
     local string = ""
     local nr = 1
 	C_MythicPlus.RequestMapInfo()
@@ -105,7 +144,7 @@ local function ES_MplusProg()
 	if #runs > ESUTIL_DB.chars[addon.charName].keynr then
 		ESUTIL_DB.chars[addon.charName].keynr = #runs
 		if #runs > 0 then
-			table.sort(runs, ES_TblSort)
+			table.sort(runs, sortRuns)
 			for _,run in pairs(runs) do
 				if nr > 8 then break end
 				if (nr == 1) or (nr == 4) or (nr == 8) then
@@ -125,12 +164,14 @@ local function ES_MplusProg()
 			print('|cff6495edES_Utilities:|r' .. ' Updated top 8 M+ runs!')
 		end
 		ESUTIL_DB.chars[addon.charName].pending = false
+		if tickerTimer then
+			tickerTimer:Cancel()
+			tickerTimer = nil
+		end
 	end
 end
 
-
-
-local function ES_KeyFormat()
+local function keyFormat()
 	local rt
 	local keylvl = C_MythicPlus.GetOwnedKeystoneLevel()
 	if keylvl then
@@ -141,7 +182,7 @@ local function ES_KeyFormat()
     return rt or false
 end
 
-local function ES_LinkKey(personal, chan)
+local function linkKey(personal, chan)
 	if personal then
 		if ESUTIL_DB.chars[addon.charName].keylink then
 			C_ChatInfo.SendChatMessage(ESUTIL_DB.chars[addon.charName].keylink, chan)
@@ -160,7 +201,7 @@ local function ES_LinkKey(personal, chan)
 	end
 end
 
-local function ES_Utilities_GetKeystoneData()
+local function getDisplayData()
 	local header = 'Type "!mykeys" in party or guild chat to report your current keys\n\n'
 	local str = ""
 	local str2 = ""
@@ -190,22 +231,13 @@ local function ES_Utilities_GetKeystoneData()
 	return header .. str .. str2 .. str3
 end
 
-local nextResetCheck
-local lastResetCheck
 local function checkWeeklyReset()
 	local sec = C_DateAndTime.GetSecondsUntilWeeklyReset()
-	--// Cant find an event that triggers on daily/weekly reset. Need this workaround to allow for the 4sec timer to check for us.
-	-- Using this snippet to throttle the code so it doesnt check so frequently until the actualy reset is approaching.
-	nextResetCheck = nextResetCheck or sec
-	lastResetCheck = lastResetCheck or sec + 1
-	if (nextResetCheck < sec) and (lastResetCheck > sec) then return end
-	if sec >= 60 then
-		nextResetCheck = math.floor(sec / 2)
-	else
-		nextResetCheck = sec
+	if sec < 10 then
+		-- If C_Timer misses and fires before the weekly reset
+		C_Timer.After(10, checkWeeklyReset)
+		return
 	end
-	lastResetCheck = sec
-	--//
 	local currdate = C_DateAndTime.GetCurrentCalendarTime()
 	local adjusted = C_DateAndTime.AdjustTimeByDays(currdate, -6)
 	local comparison = C_DateAndTime.CompareCalendarTime(ESUTIL_DB.last, adjusted) or 2
@@ -231,15 +263,15 @@ local function checkWeeklyReset()
 	end
 	ESUTIL_DB.reset = sec
 	ESUTIL_DB.last = currdate
+	C_Timer.After(sec, checkWeeklyReset) -- Schedule next reset check
 end
 
-local lastbagcheck = 0
-local function ES_Utilities_KeyUpdate()
+local function keyUpdate()
 	for itemID,show in pairs(addon.items.keyIds) do
 		if show then
 			local link = addon.currentInventory[itemID]
 			if link then
-				ESUTIL_DB.chars[addon.charName].keystr = ES_KeyFormat()
+				ESUTIL_DB.chars[addon.charName].keystr = keyFormat()
 				ESUTIL_DB.chars[addon.charName].keylink = link
 			end
 		end
@@ -261,59 +293,10 @@ addon.checkCharEntry = function()
 			pending = false
 		}
 	end
-	ES_Utilities_KeyUpdate()
+	keyUpdate()
 	vaultCheck()
-	if not ESUTIL_DB.chars[addon.charName].keynr then
-		ESUTIL_DB.chars[addon.charName].keynr = 0
-		ES_MplusProg()
-	end
-end
-
-local affixesLoaded = false
-local function updateAffixIcons(tt,success)
-	if success then
-		affix1.t:SetTexture(tt[1]["i"])
-		affix1:SetScript("OnEnter", function(self)
-			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
-			GameTooltip:SetText(tt[1]["t"], 1, 0.8, 0, 1, true)
-		end)
-		affix1:SetScript("OnLeave", function(self)
-			GameTooltip:Hide()
-		end)
-		affix2.t:SetTexture(tt[2]["i"])
-		affix2:SetScript("OnEnter", function(self)
-			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
-			GameTooltip:SetText(tt[2]["t"], 1, 0.8, 0, 1, true)
-		end)
-		affix2:SetScript("OnLeave", function(self)
-			GameTooltip:Hide()
-		end)
-		affix3.t:SetTexture(tt[3]["i"])
-		affix3:SetScript("OnEnter", function(self)
-			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
-			GameTooltip:SetText(tt[3]["t"], 1, 0.8, 0, 1, true)
-		end)
-		affix3:SetScript("OnLeave", function(self)
-			GameTooltip:Hide()
-		end)
-		affix4.t:SetTexture(tt[4]["i"])
-		affix4:SetScript("OnEnter", function(self)
-			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
-			GameTooltip:SetText(tt[4]["t"], 1, 0.8, 0, 1, true)
-		end)
-		affix4:SetScript("OnLeave", function(self)
-			GameTooltip:Hide()
-		end)
-		affixesLoaded = true
-	else
-		affix2.t:SetTexture("Interface\\EncounterJournal\\UI-EJ-WarningTextIcon")
-		affix2:SetScript("OnEnter", function(self)
-			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
-			GameTooltip:SetText('Could not retrieve affix data.\n\nWill attempt again next time you show the display.')
-		end)
-		affix2:SetScript("OnLeave", function(self)
-			GameTooltip:Hide()
-		end)
+	if ESUTIL_DB.chars[addon.charName].pending and not tickerTimer then
+		tickerTimer = C_Timer.NewTicker(4, checkmplusProg)
 	end
 end
 
@@ -342,60 +325,32 @@ local function displayFrame_Show()
 			updateAffixIcons(false, false)
 		end
 	end
-	local txt = ES_Utilities_GetKeystoneData()
-	local count = get_line_count(txt)
-	txt1:SetText(txt)
+	local displaytxt = getDisplayData()
+	local count = get_line_count(displaytxt)
+	txt1:SetText(displaytxt)
 	displayFrame:SetHeight(31 + (14 * count))
 	local widthBase = math.floor(txt1:GetWrappedWidth() + 12)
 	local widthVar = math.floor(txt1:GetWrappedWidth() + 12)
 	displayFrame:SetWidth(((widthVar >= widthBase) and widthVar) or widthBase)
 end
 
-
+local lastbagcheck = 0
 addon.keyBagCheck = function()
     if (GetTime() - lastbagcheck) >= 3 then
 		lastbagcheck = GetTime()
 		if ESUTIL_DB.chars[addon.charName].curvault then
-			C_Timer.After(1, function()
+			-- Delay to allow the game to update after picking vault reward
+			C_Timer.After(2, function()
 				if not C_WeeklyRewards.HasAvailableRewards() and not C_WeeklyRewards.HasGeneratedRewards() then
 					ESUTIL_DB.chars[addon.charName].curvault = false
 				end
-				ES_Utilities_KeyUpdate()
+				keyUpdate()
 			end)
 		else
-			ES_Utilities_KeyUpdate()
+			keyUpdate()
 		end
 	end
 end
-
-local function linkKey(event, msg)
-    if msg and string.lower(msg) == "!mykeys" then
-        if (event == "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
-            ES_LinkKey(false,"PARTY")
-        elseif (event == "CHAT_MSG_GUILD") then
-            ES_LinkKey(false,"GUILD")
-        end
-	elseif msg and string.lower(msg) == "!mykey" then
-        if (event == "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
-            ES_LinkKey(true,"PARTY")
-        elseif (event == "CHAT_MSG_GUILD") then
-            ES_LinkKey(true,"GUILD")
-        end
-    end
-end
-
-local function loopTimer_OnUpdate(self,elapsed)
-    loopCount = loopCount + elapsed
-	if loopCount >= 4 then -- 4 sec timer for pending MythicPlusProgression and weekly reset check
-		loopCount = 0
-		if ESUTIL_DB.chars[addon.charName] and ESUTIL_DB.chars[addon.charName].pending then
-		    ES_MplusProg()
-		    ES_Utilities_KeyUpdate()
-	    end
-	    checkWeeklyReset()
-	end
-end
-loopTimer:SetScript("OnUpdate", loopTimer_OnUpdate)
 
 local function toggleESUD(show)
 	if not isEnabled then return end
@@ -404,16 +359,6 @@ local function toggleESUD(show)
 	else
 		displayFrame:Hide()
 	end
-end
-
-local function showFrames()
-	isEnabled = true
-	loopTimer:Show()
-end
-
-local function hideFrames()
-	isEnabled = false
-	loopTimer:Hide()
 end
 
 local function vaultProgressInit()
@@ -433,8 +378,8 @@ local function vaultProgressInit()
 		--HideUIPanel(WeeklyRewardsFrame)
 		-- Is this completely wasted crap that I added early on when I didnt understand how to ensure dataloading? Keeping it commented out for a while to see if it has any impact.
 	--end
-	checkWeeklyReset()
 	addon.checkCharEntry()
+	checkWeeklyReset()
 end
 
 local events = {
@@ -448,7 +393,19 @@ local EL = CreateFrame("Frame")
 EL:SetScript("OnEvent", function(self, event, msg, playername, ...)
 	if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" or event == "CHAT_MSG_GUILD" then
 		if not (addon.charName == playername) then return end
-    	linkKey(event, msg)
+    	if msg and string.lower(msg) == "!mykeys" then
+        	if (event == "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
+        	    linkKey(false,"PARTY")
+    	    elseif (event == "CHAT_MSG_GUILD") then
+	            linkKey(false,"GUILD")
+        	end
+		elseif msg and string.lower(msg) == "!mykey" then
+    	    if (event == "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
+	            linkKey(true,"PARTY")
+        	elseif (event == "CHAT_MSG_GUILD") then
+            	linkKey(true,"GUILD")
+	        end
+    	end
 	end
 	if PlayerIsTimerunning() then return end
 	if event == "WEEKLY_REWARDS_UPDATE" then
@@ -456,6 +413,7 @@ EL:SetScript("OnEvent", function(self, event, msg, playername, ...)
 	elseif event == "CHALLENGE_MODE_COMPLETED" then
 		local valid, _ = IsInInstance()
 		ESUTIL_DB.chars[addon.charName].pending = valid
+		tickerTimer = C_Timer.NewTicker(4, checkmplusProg)
 	end
 end)
 
@@ -476,14 +434,14 @@ addon.toggleVaultProgress = function(enable)
 		if not isInitiated then
 			vaultProgressInit()
 			isInitiated = true
-			showFrames()
+			isEnabled = true
 			prepEvents(true)
 		elseif not isEnabled then
-			showFrames()
+			isEnabled = true
 			prepEvents(true)
 		end
 	elseif isEnabled then
+		isEnabled = false
 		prepEvents(false)
-		hideFrames()
 	end
 end

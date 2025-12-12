@@ -1,6 +1,5 @@
 local _, addon = ...
-local isInitiated = false
-local isEnabled = false
+local isInitiated,isEnabled
 
 local whitelist = { -- Warmode Airdrops
 	["Grand Marshal Tremblade"] = { -- Nazjatar (BfA)

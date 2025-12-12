@@ -1,7 +1,5 @@
 local _, addon = ...
-local isInitiated = false
-local isEnabled = false
-local greatVault
+local isInitiated,isEnabled,greatVault
 
 local function greatVault_Init()
 	_G["GameMenuFrame"].Header.Text:SetText(" ") -- Button covers it partially

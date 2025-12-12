@@ -1,6 +1,5 @@
 local _, addon = ...
-local isInitiated = false
-local isEnabled = false
+local isInitiated,isEnabled
 local EL = CreateFrame("Frame")
 
 local function ESDM_ItemCheck(tbl)

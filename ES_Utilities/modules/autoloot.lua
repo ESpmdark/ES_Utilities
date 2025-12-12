@@ -1,7 +1,5 @@
 local _, addon = ...
-local isInitiated = false
-local isEnabled = false
-
+local isInitiated,isEnabled
 local GetNumLootItems = GetNumLootItems
 local GetLootSlotInfo = GetLootSlotInfo
 local LootSlot = LootSlot

@@ -1,6 +1,5 @@
 local _, addon = ...
-local isInitiated = false
-local isEnabled = false
+local isInitiated,isEnabled
 
 local rewardFrame = CreateFrame("Frame", nil, _G["GameMenuFrame"])
 rewardFrame:SetFrameStrata("TOOLTIP")
