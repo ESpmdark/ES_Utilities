@@ -1,28 +1,6 @@
 local _, addon = ...
 local ba_Initiated,ba_Enabled,loc_Initiated,loc_Enabled,hasAddon,border1,border2
 
-local function toggleBAart(enable)
-    if enable then
-        border1:SetAlpha(1)
-	    ExtraActionButton1.style:SetAlpha(0)
-	    ExtraActionButton1.style:Hide()
-        ZoneAbilityFrame.Style:SetAlpha(0)
-	    ZoneAbilityFrame.Style:Hide()
-        if hasAddon then
-            border2:SetAlpha(1)
-        end
-    else
-        border1:SetAlpha(0)
-	    ExtraActionButton1.style:SetAlpha(1)
-	    ExtraActionButton1.style:Show()
-        ZoneAbilityFrame.Style:SetAlpha(1)
-	    ZoneAbilityFrame.Style:Show()
-        if hasAddon then
-            border2:SetAlpha(0)
-        end
-    end
-end
-
 local function toggleLOCart(enable)
     local alpha,xPos,yPos = 1,256,58
     if enable then
@@ -63,6 +41,43 @@ local function checkZoneAbilities()
 	for _,child in ipairs(children) do
 		generateZoneAbilityBorder(child)
 	end
+	if ba_Enabled then
+		ZoneAbilityFrame:SetWidth(#children * 52)
+	end
+end
+
+local function toggleBAart(enable)
+    if enable then
+        border1:SetAlpha(1)
+	    ExtraActionButton1.style:SetAlpha(0)
+	    ExtraActionButton1.style:Hide()
+        ZoneAbilityFrame.Style:SetAlpha(0)
+	    ZoneAbilityFrame.Style:Hide()
+        if hasAddon then
+            border2:SetAlpha(1)
+        end
+		ExtraAbilityContainer.spacing = 10
+		ExtraAbilityContainer.minimumWidth = 52
+		ExtraActionBarFrame:SetWidth(52)
+		checkZoneAbilities()
+    else
+        border1:SetAlpha(0)
+	    ExtraActionButton1.style:SetAlpha(1)
+	    ExtraActionButton1.style:Show()
+        ZoneAbilityFrame.Style:SetAlpha(1)
+	    ZoneAbilityFrame.Style:Show()
+        if hasAddon then
+            border2:SetAlpha(0)
+        end
+		ExtraAbilityContainer.spacing = -30
+		ExtraAbilityContainer.minimumWidth = 250
+		ExtraActionBarFrame:SetWidth(256)
+		ZoneAbilityFrame:SetWidth(256)
+    end
+	if ExtraAbilityContainer:IsVisible() then
+		ExtraAbilityContainer:UpdateLayoutIndicies()
+		ExtraAbilityContainer:UpdateShownState()
+	end
 end
 
 local function buttonartInit()
@@ -100,8 +115,8 @@ addon.toggleButtonArt = function(enable)
 		end
         toggleBAart(true)
 	elseif ba_Enabled then
-        toggleBAart(false)
 		ba_Enabled = false
+        toggleBAart(false)
 	end
 end
 
@@ -110,10 +125,10 @@ addon.toggleLossOfControl = function(enable)
 		if not loc_Initiated then
 			lossofcontrolInit()
 		end
-        toggleLOCart(true)
 		loc_Enabled = true
+        toggleLOCart(true)
 	elseif loc_Enabled then
-        toggleLOCart(false)
 		loc_Enabled = false
+        toggleLOCart(false)
 	end
 end
