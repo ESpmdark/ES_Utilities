@@ -195,7 +195,7 @@ function ESUtilitiesPopupMixin:OnAccept()
     end
     if ESUTIL_DB.toggles.drinkmacro then
         addon.toggleSettings("drinkmacro", true)
-        addon.updateDrinkMacro()
+        addon.parseMacroentries(true)
     end
 	self:Hide()
 end

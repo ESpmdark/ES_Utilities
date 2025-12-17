@@ -42,84 +42,45 @@ local defaultDB = {
 		iconsize = 42
 	}
 }
+
 addon.CombatCheck = function()
 	if UnitAffectingCombat("player") or InCombatLockdown() then return true end
 	return false
 end
 
-addon.currentInventory = {}
-addon.currentMacroItems = {defaults={},arena={}}
-local itemsToCheck = {}
+local currentInventory = {}
 local NumBagSlots = C_Container.GetContainerNumSlots
 local BagItemInfo = C_Container.GetContainerItemInfo
-
+addon.currentInventory = function(itemID)
+	return currentInventory[itemID]
+end
 local function iterateBags()
-	table.wipe(addon.currentInventory)
+	table.wipe(currentInventory)
 	for bag = 0, NUM_BAG_SLOTS do
 		local bSlots = NumBagSlots(bag)
 		for slot = 1, bSlots do
 			local info = BagItemInfo(bag, slot)
-			if info and itemsToCheck[info.itemID] then
-				addon.currentInventory[info.itemID] = info.hyperlink
+			if info then
+				currentInventory[info.itemID] = {
+					bag = bag,
+					slot = slot
+				}
 			end
 		end
     end
 end
 
-local function extractNumbers(s)
-	return s:gmatch("%d+")
-end
-local function parseMacroentries()
-	table.wipe(addon.currentMacroItems.defaults)
-	for line in extractNumbers(ESUTIL_DB.drinkmacro.defaults) do
-		local id = tonumber(line)
-		if id then
-			itemsToCheck[id] = true
-			addon.currentMacroItems.defaults[id] = true
-		end
-	end
-	table.wipe(addon.currentMacroItems.arena)
-	for line in extractNumbers(ESUTIL_DB.drinkmacro.arena) do
-		local id = tonumber(line)
-		if id then
-			itemsToCheck[id] = true
-			addon.currentMacroItems.arena[id] = true
-		end
-	end
-end
-
 local isBagEventActive = false
 local function sharedBagPrep()
-	local show = false
-	table.wipe(itemsToCheck)
-	if ESUTIL_DB.toggles.weekly then
-		show = true
-		for k,v in pairs(addon.items.keyIds) do
-			if v then
-				itemsToCheck[k] = v
-			end
-		end
-	end
-	if ESUTIL_DB.toggles.drinkmacro then
-		show = true
-		for k,v in pairs(addon.items.magefood) do
-			if v then
-				itemsToCheck[k] = v
-			end
-		end
-		parseMacroentries()
-	end
-	if not show then
-		if isBagEventActive then
-			isBagEventActive = false
-			EL:UnregisterEvent("BAG_UPDATE_DELAYED")
-		end
-	else
-		if not isBagEventActive then
-			isBagEventActive = true
-			EL:RegisterEvent("BAG_UPDATE_DELAYED")
-		end
+	local show = ESUTIL_DB.toggles.weekly or ESUTIL_DB.toggles.drinkmacro or false
+	if show and not isBagEventActive then
+		isBagEventActive = true
+		EL:RegisterEvent("BAG_UPDATE_DELAYED")
 		iterateBags()
+	end
+	if isBagEventActive and not show then
+		isBagEventActive = false
+		EL:UnregisterEvent("BAG_UPDATE_DELAYED")
 	end
 end
 
@@ -130,9 +91,7 @@ addon.toggleSettings = function(dbkey, enabled)
 	elseif dbkey == "rewards" then
 		addon.toggleRewards(enabled)
 	elseif dbkey == "weekly" then
-		if enabled then
-			sharedBagPrep()
-		end
+		sharedBagPrep()
 		addon.toggleVaultProgress(enabled)
 	elseif dbkey == "currency" then
 		addon.toggleCurrencies(enabled)
@@ -141,9 +100,7 @@ addon.toggleSettings = function(dbkey, enabled)
 	elseif dbkey == "collected" then
 		addon.toggleCollected(enabled)
 	elseif dbkey == "drinkmacro" then
-		if enabled then
-			sharedBagPrep()
-		end
+		sharedBagPrep()
 		addon.toggleDrinkingMacro(enabled)
 	elseif dbkey == "talkinghead" then
 		addon.toggleTalkingHead(enabled)

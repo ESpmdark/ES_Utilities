@@ -5,13 +5,15 @@ local EL = CreateFrame("Frame")
 local function ESDM_ItemCheck(tbl)
 	local rt = false
 	for item,_ in pairs(tbl) do
-		if addon.currentInventory[item] then
+		if addon.currentInventory(item) then
 			rt = "/use item:" .. item
 			break
 		end
 	end
 	return rt
 end
+
+local currentMacroItems = {defaults={},arena={}}
 
 addon.updateDrinkMacro = function()
 	if addon.CombatCheck() then return end
@@ -24,12 +26,12 @@ addon.updateDrinkMacro = function()
 			item = mf
 		else
 			if C_PvP.IsArena() then
-				local aw = ESDM_ItemCheck(addon.currentMacroItems.arena)
+				local aw = ESDM_ItemCheck(currentMacroItems.arena)
 				if aw then
 					item = aw
 				end
 			else
-				local df = ESDM_ItemCheck(addon.currentMacroItems.defaults)
+				local df = ESDM_ItemCheck(currentMacroItems.defaults)
 				if df then
 					item = df
 				end
@@ -39,11 +41,36 @@ addon.updateDrinkMacro = function()
 	end
 end
 
+local function extractNumbers(s)
+	return s:gmatch("%d+")
+end
+
+addon.parseMacroentries = function(force)
+	table.wipe(currentMacroItems.defaults)
+	for line in extractNumbers(ESUTIL_DB.drinkmacro.defaults) do
+		local id = tonumber(line)
+		if id then
+			currentMacroItems.defaults[id] = true
+		end
+	end
+	table.wipe(currentMacroItems.arena)
+	for line in extractNumbers(ESUTIL_DB.drinkmacro.arena) do
+		local id = tonumber(line)
+		if id then
+			currentMacroItems.arena[id] = true
+		end
+	end
+	if force and isEnabled then
+		addon.updateDrinkMacro()
+	end
+end
+
 local function drinkMacroInit()
 	if not C_AddOns.IsAddOnLoaded("Blizzard_MacroUI") then
 		C_AddOns.LoadAddOn("Blizzard_MacroUI")
 	end
 	isInitiated = true
+	addon.parseMacroentries()
 end
 
 local function drinkMacroToggle(enable)

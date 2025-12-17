@@ -271,13 +271,15 @@ local function checkWeeklyReset()
 	C_Timer.After(sec, checkWeeklyReset) -- Schedule next reset check
 end
 
+local BagItemInfo = C_Container.GetContainerItemInfo
 local function keyUpdate()
 	for itemID,show in pairs(addon.items.keyIds) do
-		if show then
-			local link = addon.currentInventory[itemID]
-			if link then
+		local item = addon.currentInventory(itemID)
+		if show and item then
+			local info = BagItemInfo(item.bag, item.slot)
+			if info and info.hyperlink then
 				ESUTIL_DB.chars[addon.charName].keystr = keyFormat()
-				ESUTIL_DB.chars[addon.charName].keylink = link
+				ESUTIL_DB.chars[addon.charName].keylink = info.hyperlink
 			end
 		end
 	end
