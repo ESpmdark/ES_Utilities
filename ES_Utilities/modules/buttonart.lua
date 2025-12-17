@@ -1,5 +1,6 @@
 local _, addon = ...
 local ba_Initiated,ba_Enabled,loc_Initiated,loc_Enabled,hasAddon,border1,border2
+local EL = CreateFrame("Frame")
 
 local function toggleLOCart(enable)
     local alpha,xPos,yPos = 1,256,58
@@ -24,11 +25,14 @@ local function generateZoneAbilityBorder(frame)
 	if not frame then return end
 	if not ba_Enabled then
 		if frame.Custom then
-			frame.Custom = nil
+			frame.Custom:SetAlpha(0)
 		end
 		return
 	end
-	if frame.Custom then return	end
+	if frame.Custom then
+		frame.Custom:SetAlpha(1)
+		return
+	end
 	frame.Custom = frame:CreateTexture(nil, "ARTWORK", nil, 7)
 	frame.Custom:SetAllPoints()
 	frame.Custom:SetTexture("Interface\\AddOns\\ES_Utilities\\img\\border_ZoneAbility.tga")
@@ -47,6 +51,10 @@ local function checkZoneAbilities()
 end
 
 local function toggleBAart(enable)
+	if addon.CombatCheck() then
+		EL:RegisterEvent("PLAYER_REGEN_ENABLED")
+		return
+	end
     if enable then
         border1:SetAlpha(1)
 	    ExtraActionButton1.style:SetAlpha(0)
@@ -59,7 +67,6 @@ local function toggleBAart(enable)
 		ExtraAbilityContainer.spacing = 10
 		ExtraAbilityContainer.minimumWidth = 52
 		ExtraActionBarFrame:SetWidth(52)
-		checkZoneAbilities()
     else
         border1:SetAlpha(0)
 	    ExtraActionButton1.style:SetAlpha(1)
@@ -75,10 +82,15 @@ local function toggleBAart(enable)
 		ZoneAbilityFrame:SetWidth(256)
     end
 	if ExtraAbilityContainer:IsVisible() then
-		ExtraAbilityContainer:UpdateLayoutIndicies()
-		ExtraAbilityContainer:UpdateShownState()
+		checkZoneAbilities()
+		ExtraAbilityContainer:MarkDirty()
 	end
 end
+
+EL:SetScript("OnEvent", function()
+	toggleBAart(ba_Enabled)
+	EL:UnregisterEvent("PLAYER_REGEN_ENABLED")
+end)
 
 local function buttonartInit()
 	border1 = ExtraActionButton1:CreateTexture(nil, "ARTWORK", nil, 7)
