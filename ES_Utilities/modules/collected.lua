@@ -24,9 +24,11 @@ end
 
 local function collectedInit()
 	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
+		ESCmixin:UpdateMerchant(true)
+	end)
+	hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
 		ESCmixin:UpdateMerchant()
 	end)
-
 	if not C_AddOns.IsAddOnLoaded("Blizzard_EncounterJournal") then
 		EL:RegisterEvent("ADDON_LOADED")
 	else
@@ -76,10 +78,10 @@ function ESCmixin:CreateButton(parentFrame)
 	parentFrame.ES_CollectedTXT:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", 0, 0)
 end
 
-function ESCmixin:UpdateMerchantBtn(i,padding)
+function ESCmixin:UpdateMerchantBtn(i,padding,check)
     local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
 	if not itemButton then return end
-	if not isEnabled then
+	if not isEnabled or not check then
 		if itemButton.ES_CollectedTXT then
 			itemButton.ES_CollectedTXT:SetText("")
 		end
@@ -141,13 +143,13 @@ function ESCmixin:IsItemCollected(itemID, link)
 	return "hide", false
 end
 
-function ESCmixin:UpdateMerchant()
+function ESCmixin:UpdateMerchant(check)
 	local count = GetMerchantNumItems()
 	if count and (count >= 1) then
 		local size = MERCHANT_ITEMS_PER_PAGE
 		local padding = size * (MerchantFrame.page - 1)
 		for i = 1, size do
-			self:UpdateMerchantBtn(i,padding)
+			self:UpdateMerchantBtn(i,padding,check)
 		end
 	end
 end
