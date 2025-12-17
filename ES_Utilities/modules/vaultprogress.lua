@@ -256,7 +256,12 @@ local function checkWeeklyReset()
 			end
 		end
 		if vaultcount > 0 then
-			PlaySound(31578, "Master", true)
+			local willPlay, _ = PlaySound(31578, "Master", true)
+			if not willPlay then -- Too early in the load, delay once.
+				C_Timer.After(1, function()
+					PlaySound(31578, "Master", true)
+				end)
+			end
 			print('|cff6495edES_Utilities:|r' .. ' Weekly reset has occurred!')
 			print('|cff6495edES_Utilities:|r ' .. vaultcount ..' character' .. ((vaultcount > 1 and 's') or '') .. ' have rewards waiting.')
 		end
