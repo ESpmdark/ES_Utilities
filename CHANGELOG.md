@@ -1,4 +1,6 @@
 # [ES_Utilities](https://github.com/ESpmdark/ES_Utilities)
 
-## Version: 2.0.9
-- Button Art: Adjust Blizzards padding values. Should now reflect the cleaner sizes when both ExtraActionButton1 and ZoneAbility are displayed at the same time.
+## Version: 2.0.10
+- Collected: Properly hide while looking at the buyback tab
+- Button Art: Respect combat during enable/disable
+- Small core fixes.
