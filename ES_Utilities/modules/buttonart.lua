@@ -64,8 +64,8 @@ local function toggleBAart(enable)
         if hasAddon then
             border2:SetAlpha(1)
         end
-		ExtraAbilityContainer.spacing = 10
-		ExtraAbilityContainer.minimumWidth = 52
+		--ExtraAbilityContainer.spacing = 10 -- Causes taint
+		--ExtraAbilityContainer.minimumWidth = 52 -- Causes taint
 		ExtraActionBarFrame:SetWidth(52)
     else
         border1:SetAlpha(0)
@@ -76,8 +76,8 @@ local function toggleBAart(enable)
         if hasAddon then
             border2:SetAlpha(0)
         end
-		ExtraAbilityContainer.spacing = -30
-		ExtraAbilityContainer.minimumWidth = 250
+		--ExtraAbilityContainer.spacing = -30 -- Causes taint
+		--ExtraAbilityContainer.minimumWidth = 250 -- Causes taint
 		ExtraActionBarFrame:SetWidth(256)
 		ZoneAbilityFrame:SetWidth(256)
     end
