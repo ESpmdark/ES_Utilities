@@ -63,7 +63,7 @@ local function updateCurrencies()
 		["curr5"] = 5,
 		["curr6"] = 6,
 	}
-	local f = _G["CharacterFrame"]
+	local f = _G["PaperDollFrame"]
 	local f2
 	for i=1, select("#", f:GetChildren()) do
 		local ChildFrame = select(i, f:GetChildren())
@@ -83,7 +83,7 @@ local function updateCurrencies()
 end
 
 local function curencyInit()
-	ESUC_Frame = CreateFrame("Frame", "ES_Utilities_Currencies", _G["CharacterFrame"])
+	ESUC_Frame = CreateFrame("Frame", "ES_Utilities_Currencies", _G["PaperDollFrame"])
 	local txt = ESUC_Frame:CreateTexture(nil, "BACKGROUND")
 	txt:SetAllPoints()
 	txt:SetColorTexture(0, 0, 0, 0.8)
