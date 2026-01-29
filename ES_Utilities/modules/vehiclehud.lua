@@ -75,30 +75,23 @@ local function updateActions()
 	if not ref[isVisible] then return end
 	table.wipe(activeButtons)
 	for i=1,12 do
-		local action = GetActionTexture(ref[isVisible][i]) and ref[isVisible][i] or 0
-        local icon = action and GetActionTexture(action)
+		local action = C_ActionBar.GetActionTexture(ref[isVisible][i]) and ref[isVisible][i] or 0
+        local icon = action and C_ActionBar.GetActionTexture(action)
         local id = icon and select(2, GetActionInfo(action))
         if id then
 			activeButtons[i] = action
-			local start, dur, _ = GetActionCooldown(action)
-			local cCharge, mCharge = GetActionCharges(action)
-			local cText = ((mCharge > 1) and cCharge) or ""
-			local isUsable, _ = IsUsableAction(action)
+			local cooldown = C_ActionBar.GetActionCooldown(action)
+			local isUsable, _ = C_ActionBar.IsUsableAction(action)
 			main[i]:Show()
 			main[i].overlay:Hide()
 			main[i].icon:SetDesaturated(false)
-			main[i].charge:SetText(cText)
-			if start and start > 0 then
-				main[i].cd:SetCooldown(start, dur)
-				if tostring(cText) or cText < 1 then
-					if dur > 1.6 then -- Dont color global cooldowns
-						main[i].overlay:Show()
-						main[i].icon:SetDesaturated(true)
-					end
-				end
-			elseif not isUsable then
+			main[i].charge:SetText(C_ActionBar.GetActionDisplayCount(id))
+			
+			if not isUsable then
 				main[i].overlay:Show()
 				main[i].icon:SetDesaturated(true)
+			else
+				main[i].cd:SetCooldown(cooldown.startTime, cooldown.duration)
 			end
 			main[i].icon:SetTexture(icon)
 		else
@@ -142,11 +135,11 @@ local function updateShownState()
 		updateDisplay(true)
 		return
 	end
-	if HasOverrideActionBar() then
+	if C_ActionBar.HasOverrideActionBar() then
 		isVisible = "override"
-	elseif HasVehicleActionBar() then
+	elseif C_ActionBar.HasVehicleActionBar() then
 		isVisible = "vehicle"
-	elseif IsPossessBarVisible() then
+	elseif C_ActionBar.IsPossessBarVisible() then
 		isVisible = "possess"
 	elseif isVisible then
 		isVisible = nil
@@ -325,11 +318,11 @@ end
 
 EL:SetScript("OnEvent", function(self, event, ...)
 	if eventList[event] then
-		if HasVehicleActionBar() then
+		if C_ActionBar.HasVehicleActionBar() then
 			isVisible = "vehicle"
-		elseif HasOverrideActionBar() then
+		elseif C_ActionBar.HasOverrideActionBar() then
 			isVisible = "override"
-		elseif IsPossessBarVisible() then
+		elseif C_ActionBar.IsPossessBarVisible() then
 			isVisible = "possess"
 		else
 			isVisible = nil
