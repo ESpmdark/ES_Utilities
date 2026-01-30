@@ -90,9 +90,9 @@ local function updateActions()
 			if not isUsable then
 				main[i].overlay:Show()
 				main[i].icon:SetDesaturated(true)
-			else
-				main[i].cd:SetCooldown(cooldown.startTime, cooldown.duration)
 			end
+			main[i].cd:SetCooldown(cooldown.startTime, cooldown.duration)
+			
 			main[i].icon:SetTexture(icon)
 		else
 			main[i]:Hide()
