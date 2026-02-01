@@ -82,6 +82,11 @@ local description = {
             },
         },
     },
+    [12] = {
+        key = "talent",
+        text = "Talent additions",
+        tt = "Adds a set of buttons on the talentframe to import and save/load layouts. These function outside of Blizzards layout logic, and focus purely on the talents within the layoutstrings.",
+    },
 }
 
 local function createResetButton(parent)

@@ -19,6 +19,7 @@ local defaultDB = {
 		lossofcontrol = false,
 		vehiclehud = false,
 		vehicleedit = false,
+		talent = false,
 	},
 	last = {
 		monthDay = 1,
@@ -40,7 +41,8 @@ local defaultDB = {
 		yPos = 0,
 		scale = 1,
 		iconsize = 42
-	}
+	},
+	talentbuilds = {},
 }
 
 addon.CombatCheck = function()
@@ -112,6 +114,8 @@ addon.toggleSettings = function(dbkey, enabled)
 		addon.toggleVehicleHUD(enabled)
 	elseif dbkey == "vehicleedit" then
 		addon.toggleVehicleEdit(enabled)
+	elseif dbkey == "talent" then
+		addon.toggleTalent(enabled)
 	end
 end
 
