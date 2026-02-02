@@ -16,3 +16,4 @@ frames\editbox.xml
 frames\talent_main.xml
 frames\talent_import.xml
 frames\talent_save.xml
+frames\travel_edit.xml

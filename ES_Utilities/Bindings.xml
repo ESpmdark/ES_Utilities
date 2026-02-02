@@ -1,0 +1,6 @@
+<Bindings>
+	<!-- Toggle panel -->
+	<Binding name="ES_UTILITIES_TRAVEL_TOGGLE" category = "ES Utilities">
+		ES_Utilities_Travel_Toggle()
+	</Binding>
+</Bindings>

@@ -1,0 +1,125 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+	<Frame name="ES_Utilities_TravelEdit" mixin="ESUtilitiesTravelEditmixin"  inherits="MainMenuFrameTemplate" clampedToScreen="true" hidden="true" frameStrata="MEDIUM" parent="UIParent" enableMouse="true">
+		<Size x="300" y="260"/>
+		<Anchors>
+			<Anchor point="TOP" relativePoint="TOP" y="-200"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBackdrop" atlas="transfer-log-background">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="10" y="-10"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-10" y="10"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="Scale">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.ContentArea" x="68" y="-30"/>
+					<Anchor point="TOPRIGHT" relativePoint="TOP" relativeKey="$parent.ContentArea" x="-10"/>
+				</Anchors>
+				<Size x="260" y="50"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal" text="Scale:">
+							<Anchors>
+								<Anchor point="RIGHT" relativePoint="LEFT" x="-10"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox parentKey="EditBox" inherits="InputBoxTemplate" mixin="ESUtilitiesTravelEditmixin" letters="5" autoFocus="false">
+						<Size x="64" y="32"/>
+						<FontString inherits="ChatFontNormal"/>
+						<Anchors>
+							<Anchor point="LEFT" x="0" y="0"/>
+						</Anchors>
+						<Scripts>
+	        				<OnShow>
+        	    				self:OnShow(self, "scale")
+        					</OnShow>
+							<OnEnterPressed>
+								self:OnEnterPressed()
+							</OnEnterPressed>
+						</Scripts>
+					</EditBox>
+				</Frames>
+			</Frame>
+
+			<DropdownButton parentKey="PersonalDropdown" inherits="WowStyle1DropdownTemplate">
+    			<Anchors>
+					<Anchor point="TOPLEFT" x="20" y="-100"/>
+					<Anchor point="TOPRIGHT" x="-20" y="-100"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal" text="Personal: Use Hearthstone-toy">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" y="0"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+	        		<OnShow>
+        	    		self:GetParent():OnShow(self, "personal")
+        			</OnShow>
+					<OnLoad function="ES_Utilities_PersonalTravelDropdown_Load"/>
+    			</Scripts>
+			</DropdownButton>
+
+			<DropdownButton parentKey="GlobalDropdown" inherits="WowStyle1DropdownTemplate">
+    			<Anchors>
+					<Anchor point="TOPLEFT" x="20" y="-160"/>
+					<Anchor point="TOPRIGHT" x="-20" y="-160"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Label" inherits="GameFontNormal" text="Global: Used if personal is empty.">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" y="0"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+	        		<OnShow>
+        	    		self:GetParent():OnShow(self, "global")
+        			</OnShow>
+					<OnLoad function="ES_Utilities_GlobalTravelDropdown_Load"/>
+    			</Scripts>
+			</DropdownButton>
+			
+			<Button parentKey="AcceptButton" inherits="UIPanelButtonTemplate" text="ACCEPT">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" relativeKey="$parent.ContentArea" x="-5" y="16"/>
+				</Anchors>
+				<Size x="64" y="26"/>
+				<Scripts>
+					<OnClick>
+						self:GetParent():OnAccept()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="CancelButton" inherits="UIPanelButtonTemplate" text="CANCEL">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOM" relativeKey="$parent.ContentArea" x="5" y="16"/>
+				</Anchors>
+				<Size x="64" y="26"/>
+				<Scripts>
+					<OnClick>
+						self:GetParent():Hide()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnShow method="OnShow"/>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</Frame>
+</Ui>

@@ -1,4 +1,5 @@
 local _, addon = ...
+local fact, _ = UnitFactionGroup("player")
 
 addon.illusions = { -- [itemID] = illusionID
 	--Default Illusions?
@@ -317,3 +318,249 @@ addon.currencies = {
 	[5] = 3288, -- Runed
 	[6] = 3290 -- Gilded
 }
+
+local factionlookup = {
+	["Alliance"] = {
+		[1] = {port = 33691, tele = 33690, name = "Shattrath"},
+		[2] = {port = 88345, tele = 88342, name = "Tol Barad"},
+		[3] = {port = 132620, tele = 132621, name = "Vale of\nEternal\nBlossoms"},
+		[4] = {port = 176246, tele = 176248, name = "Ashran"}
+	},
+	["Horde"] = {
+		[1] = {port = 35717, tele = 35715, name = "Shattrath"},
+		[2] = {port = 88346, tele = 88344, name = "Tol Barad"},
+		[3] = {port = 132626, tele = 132627, name = "Vale of\nEternal\nBlossoms"},
+		[4] = {port = 176244, tele = 176242, name = "Ashran"}
+	}
+}
+
+addon.ports = { -- Mage Teleports/Portals
+	[1] = {port = 11417, tele = 3567, name = "Orgrimmar"},
+	[2] = {port = 10059, tele = 3561, name = "Stormwind"},
+	[3] = {port = 11418, tele = 3563, name = "Undercity"},
+	[4] = {port = 11416, tele = 3562, name = "Ironforge"},
+	[5] = {port = 11420, tele = 3566, name = "Thunder Bluff"},
+	[6] = {port = 11419, tele = 3565, name = "Darnassus"},
+	[7] = {port = 32267, tele = 32272, name = "Silvermoon"},
+	[8] = {port = 32266, tele = 32271, name = "Exodar"},
+	[9] = {port = 49361, tele = 49358, name = "Stonard"},
+	[10] = {port = 49360, tele = 49359, name = "Theramore"},
+	[11] = factionlookup[fact][1], -- Shattrath
+	[12] = {port = 53142, tele = 53140, name = "Dalaran\nNorthrend"},
+	[13] = factionlookup[fact][2], -- Tol Barad
+	[14] = {port = 120146, tele = 120145, name = "Dalaran\nAncient"},
+	[15] = factionlookup[fact][3], -- Vale of Eternal Blossoms
+	[16] = factionlookup[fact][4], -- Ashran
+	[17] = {port = 224871, tele = 224869, name = "Dalaran\nLegion"},
+	[18] = {port = false, tele = 193759, name = "Hall of the\nGuardian"},
+	[19] = {port = 281402, tele = 281404, name = "Dazar'alor"},
+	[20] = {port = 281400, tele = 281403, name = "Boralus"},
+	[21] = {port = 344597, tele = 344587, name = "Oribos"},
+	[22] = {port = 395289, tele = 395277, name = "Valdrakken"},
+	[23] = {port = 446534, tele = 446540, name = "Dornogal"},
+}
+
+addon.mainTitle = { -- Category titles for main window
+	[1] = "General",
+	[2] = "Engineering",
+	[3] = "Mage",
+}
+
+addon.dungeonTitle = { -- Category titles for dungeon window
+	[1] = "Other",
+	[2] = "Legion",
+	[3] = "Battle for Azeroth",
+	[4] = "Shadowlands",
+	[5] = "Dragonflight",
+	[6] = "The War Within",
+	[7] = "Midnight",
+	[8] = "Current Season",
+}
+
+addon.dungeon = {
+	[1] = { -- Other
+		[445424] = "Grim Batol",
+		[159899] = "Shadowmoon\nBurial Grounds",
+		[159900] = "Grimrail\nDepot",
+		[159896] = "Iron Docks",
+		[131204] = "Temple of the\nJade Serpent",
+		[424142] = "Throne of\nthe Tides",
+		[159901] = "The\nEverbloom",
+		[410080] = "Vortex\nPinnacle",
+		[1254555] = "Pit of\nSaron",
+		[1254557] = "Skyreach", -- 159898 is the original ID from WOD
+	},
+	[2] = { -- Legion
+		[424153] = "Black Rook\nHold",
+		[393766] = "Court of\nStars",
+		[424163] = "Darkheart\nThicket",
+		[393764] = "Halls of\nValor",
+		[410078] = "Neltharion's\nLair",
+		[373262] = "Karazhan",
+		[1254551] = " Seat of the\nTriumvirate",
+	},
+	[3] = { -- Battle for Azeroth
+		[424187] = "Atal Dazar",
+		[410071] = "Freehold",
+		[373274] = "Operation:\nMechagon",
+		[445418] = "Siege of\nBoralus", --Alliance
+		[464256] = "Siege of\nBoralus", --Horde
+		[410074] = "Underrot",
+		[424167] = "Waycrest\nManor",
+		[467555] = "The\nMOTHERLODE!!",
+	},
+	[4] = { -- Shadowlands
+		[354463] = "Plaguefall",
+		[354468] = "De Other\nSide",
+		--[354465] = "Halls of\nAtonement",
+		[354464] = "Mists of\nTirna Scithe",
+		[354462] = "Necrotic\nWake",
+		[354469] = "Sanguine\nDepths",
+		[354466] = "Spires of\nAscension",
+		[354467] = "Theater\nof Pain",
+		--[367416] = "Tazavesh",
+	},
+	[5] = { -- Dragonflight
+		[393273] = "Algeth'ar\nAcademy",
+		[393267] = "Brackenhide\nHollow",
+		[393283] = "Halls of\nInfusion",
+		[393276] = "Neltharus",
+		[393256] = "Ruby\nLife Pools",
+		[393279] = "Azure Vault",
+		[393262] = "Nokhud\nOffensive",
+		[393222] = "Uldaman:LoT",
+		[424197] = "Dawn of\nthe Infinite",
+	},
+	[6] = { -- The War Within
+		[445269] = "Stonevault",
+		--[445414] = "Dawnbreaker",
+		--[445417] = "Ara-Kara",
+		[445416] = "City of\nThreads",
+		[445443] = "The Rookery",
+		[445440] = "Cinderbrew\nMeadery",
+		--[445444] = "Priory of the\nSacred Flame",
+		[445441] = "Darkflame\nCleft",
+		--[1216786] = "Operation:\nFloodgate",
+		--[1237215] = "Eco-Dome\nAl'dani",
+	},
+	[7] = { -- Midnight
+		-- First Season old dungeons:
+		-- Algeth'ar Academy, Seat of the Triumvirate, Skyreach, Pit of Saron
+		--//
+		--[1254572] = "Magister's\nTerrace",
+		--[1254400] = "Windrunner\nSpire",
+		--[1254563] = "Nexus Point\nXenas", -- Marked as placeholder, verify later.
+		--[1254559] = "Maisara\nCaverns", -- Marked as placeholder, verify later.
+	},
+	[8] ={ -- Current Season
+		[445417] = "Ara-Kara",
+		[445414] = "Dawnbreaker",
+		[1216786] = "Operation:\nFloodgate",
+		[445444] = "Priory of the\nSacred Flame",
+		[354465] = "Halls of\nAtonement",
+		[367416] = "Tazavesh",
+		[1237215] = "Eco-Dome\nAl'dani",
+	},
+}
+
+addon.wormholes = {
+	[1] = {id = 18986, name = "Gadgetzan"},
+	[2] = {id = 18984, name = "Everlook"},
+	[3] = {id = 30544, name = "Toshley's Station"},
+	[4] = {id = 30542, name = "Area 52"},
+	[5] = {id = 48933, name = "Northrend"},
+	[6] = {id = 87215, name = "Pandaria"},
+	[7] = {id = 112059, name = "Draenor"},
+	[8] = {id = 151652, name = "Argus"},
+	[9] = {id = 144341, item = "Rechargeable Reaves Battery", name = "Legion"},
+	[10] = {id = 168807, name = "Kul Tiras"},
+	[11] = {id = 168808, name = "Zandalar"},
+	[12] = {id = 172924, name = "Shadowlands"},
+	[13] = {id = 198156, name = "Dragon Isles"},
+	[14] = {id = 221966, name = "Khaz Algar"},
+}
+
+local questRef = {
+	[140192] = {44663, 44184}, -- Dalaran
+	[110560] = {34378, 34586} -- Garrrison  
+}
+
+addon.checkQuest = function(questId)
+	for _,id in ipairs(questRef[questId]) do
+		if C_QuestLog.IsQuestFlaggedCompleted(id) then
+			return true
+		end
+	end
+	return false
+end
+
+addon.general = {
+	[1] = {id = 126892, type = "spell", name = "Zen\nPilgrimage"},
+	[2] = {id = 50977, type = "spell", name = "Death Gate"},
+	[3] = {id = 18960, type = "spell", name = "Moonglade"},
+	[4] = {id = 193753, type = "spell", name = "Dreamwalk"},
+	[5] = {id = 243056, type = "toy", name = "Dornogal"},
+	[6] = {id = 110560, type = "toy", name = "Garrison", quest = true},
+	[7] = {id = 140192, type = "toy", name = "Dalaran", quest = true},
+	[8] = {id = 556, type = "spell", name = "Astral Recall"},
+	[9] = {id = 6948, type = "item", name = "Hearthstone"},
+}
+
+local list = { -- Toys to check and add for HS override setting
+	[166747] = "Brewfest Reveler's Hearthstone",
+	[190237] = "Broker Translocation Matrix",
+	[246565] = "Cosmic Hearthstone",
+	[93672] = "Dark Portal",
+	[208704] = "Deepdweller's Earthen Hearthstone",
+	[188952] = "Dominated Hearthstone",
+	[190196] = "Enlightened Hearthstone",
+	[172179] = "Eternal Traveler's Hearthstone",
+	[54452] = "Ethereal Portal",
+	[236687] = "Explosive Hearthstone",
+	[166746] = "Fire Eater's Hearthstone",
+	[162973] = "Greatfather Winter's Hearthstone",
+	[163045] = "Headless Horseman's Hearthstone",
+	[209035] = "Hearthstone of the Flame",
+	[168907] = "Holographic Digitalization Hearthstone",
+	[184353] = "Kyrian Hearthstone",
+	[165669] = "Lunar Elder's Hearthstone",
+	[182773] = "Necrolord Hearthstone",
+	[180290] = "Night Fae Hearthstone",
+	[165802] = "Noble Gardener's Hearthstone",
+	[228940] = "Notorious Thread's Hearthstone",
+	[200630] = "Ohn'ir Windsage's Hearthstone",
+	[245970] = "P.O.S.T. Master's Express Hearthstone",
+	[206195] = "Path of the Naaru",
+	[165670] = "Peddlefeet's Lovely Hearthstone",
+	[235016] = "Redeployment Module",
+	[212337] = "Stone of the Hearth",
+	[64488] = "The Innkeeper's Daughter",
+	[193588] = "Timewalker's Hearthstone",
+	[142542] = "Tome of Town Portal",
+	[183716] = "Venthyr Hearthstone",
+}
+
+addon.knownToys = {}
+addon.knownReversed = {}
+
+addon.getToyName = function(itemID)
+	return list[itemID]
+end
+
+addon.initToys = function()
+	table.wipe(addon.knownToys)
+	table.wipe(addon.knownReversed)
+	for k,v in pairs(list) do
+		if PlayerHasToy(k) then
+			addon.knownToys[k] = v
+		end
+	end
+	local sorted = {}
+	for k,v in pairs(addon.knownToys) do
+		addon.knownReversed[v] = k
+		table.insert(sorted, v)
+	end
+	table.sort(sorted)
+	addon.knownToys = sorted
+end
+

@@ -12,4 +12,5 @@
 <Script file="buttonart.lua"/>
 <Script file="vehiclehud.lua"/>
 <Script file="talent.lua"/>
+<Script file="travel.lua"/>
 </Ui>

@@ -1,5 +1,5 @@
 local _, addon = ...
-local EL = CreateFrame("Frame") -- EventListener
+local EL = CreateFrame("Frame")
 addon.font_LiberationSansRegular = "Interface\\Addons\\ES_Utilities\\fonts\\LiberationSans-Regular.TTF"
 
 local defaultDB = {
@@ -20,6 +20,7 @@ local defaultDB = {
 		vehiclehud = false,
 		vehicleedit = false,
 		talent = false,
+		travel = false,
 	},
 	last = {
 		monthDay = 1,
@@ -43,6 +44,9 @@ local defaultDB = {
 		iconsize = 42
 	},
 	talentbuilds = {},
+	travel = {
+		scale = 1,
+	}
 }
 
 addon.CombatCheck = function()
@@ -74,7 +78,7 @@ end
 
 local isBagEventActive = false
 local function sharedBagPrep()
-	local show = ESUTIL_DB.toggles.weekly or ESUTIL_DB.toggles.drinkmacro or false
+	local show = ESUTIL_DB.toggles.weekly or ESUTIL_DB.toggles.drinkmacro or ESUTIL_DB.toggles.weekly or false
 	if show and not isBagEventActive then
 		isBagEventActive = true
 		EL:RegisterEvent("BAG_UPDATE_DELAYED")
@@ -116,6 +120,8 @@ addon.toggleSettings = function(dbkey, enabled)
 		addon.toggleVehicleEdit(enabled)
 	elseif dbkey == "talent" then
 		addon.toggleTalent(enabled)
+	elseif dbkey == "travel" then
+		addon.toggleTravel(enabled)
 	end
 end
 
@@ -123,9 +129,9 @@ local function InitializeAddon()
 	local pFirst,_ = UnitName("player")
 	addon.charName = pFirst .. '-' .. GetRealmName()
 	ESUTIL_DB = ESUTIL_DB or defaultDB
-
-	for k,v in pairs(defaultDB) do -- Handle new defaults for user
-		if not (k == "chars") then -- Ignore this one
+	
+	for k,v in pairs(defaultDB) do
+		if not (k == "chars") then
 			if ESUTIL_DB[k] == nil then
 				ESUTIL_DB[k] = v
 			elseif type(v) == "table" then

@@ -85,7 +85,12 @@ local description = {
     [12] = {
         key = "talent",
         text = "Talent additions",
-        tt = "Adds a set of buttons on the talentframe to import and save/load layouts. These function outside of Blizzards layout logic, and focus purely on the talents within the layoutstrings.",
+        tt = "Adds a set of buttons on the talentframe to import and save/load layouts.\n\nThis ignores Blizzards layout logic, and focus purely on the talents within the layoutstrings.\nMeaning your actionbars are left alone.",
+    },
+    [13] = {
+        key = "travel",
+        text = "Travel frame",
+        tt = 'Adds a panel that contains a set of travel spells/toys for easy access.\n\nKeybind to toggle this panel can be set in Blizzards own keybind settings, in the category "ES_Utilities".',
     },
 }
 
@@ -128,6 +133,23 @@ local function createEditButton(parent)
     end)
 end
 
+local function createTravelButton(parent)
+    local b = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
+    b:SetPoint("LEFT", parent.Text, "RIGHT", 10, 0)
+    b:SetSize(38,24)
+    b:SetText("Edit")
+    b:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+			GameTooltip:SetText("Travel frame settings.", 1, 0.8, 0, 1, true)
+    end)
+    b:SetScript("OnLeave", function(self)
+            GameTooltip:Hide()
+    end)
+    b:SetScript("OnClick", function(self)
+        ES_Utilities_TravelEdit:Show()
+    end)
+end
+
 local function createToggle(info,child)
     local panel = _G["ES_Utilities_ConfigScrollFrame"].ScrollChild
     local b = CreateFrame("CheckButton", info.key, panel, "UICheckButtonTemplate")
@@ -158,6 +180,8 @@ local function createToggle(info,child)
         createEditButton(b)
     elseif info.key == "weekly" then
         createResetButton(b)
+    elseif info.key == "travel" then
+        createTravelButton(b)
     end
 end
 
