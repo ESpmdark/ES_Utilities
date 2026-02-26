@@ -1,5 +1,5 @@
 local _, addon = ...
-local isInitiated,isEnabled,tickerTimer,displayFrame,txt,txt1,affix1,affix2,affix3,affix4,affixesLoaded,bTop,bBot,bLeft,bRight
+local isInitiated,isEnabled,tickerTimer,weeklyScheduled,displayFrame,txt,txt1,affix1,affix2,affix3,affix4,affixesLoaded,bTop,bBot,bLeft,bRight
 
 local function updateAffixIcons(tt,success)
 	if success then
@@ -110,6 +110,7 @@ local function createProgressDisplay()
 end
 
 local function vaultCheck()
+	if not weeklyScheduled then return end
 	if ESUTIL_DB.chars[addon.charName].curvault then return end
 	local vault = C_WeeklyRewards.GetActivities()
 	local t = {}
@@ -269,6 +270,7 @@ local function checkWeeklyReset()
 	ESUTIL_DB.reset = sec
 	ESUTIL_DB.last = currdate
 	C_Timer.After(sec, checkWeeklyReset) -- Schedule next reset check
+	weeklyScheduled = true
 end
 
 local BagItemInfo = C_Container.GetContainerItemInfo
@@ -385,8 +387,8 @@ local function vaultProgressInit()
 		--HideUIPanel(WeeklyRewardsFrame)
 		-- Is this completely wasted crap that I added early on when I didnt understand how to ensure dataloading? Keeping it commented out for a while to see if it has any impact.
 	--end
-	addon.checkCharEntry()
 	checkWeeklyReset()
+	addon.checkCharEntry()
 end
 
 local events = {
