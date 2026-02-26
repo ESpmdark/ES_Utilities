@@ -1,6 +1,6 @@
 local _, addon = ...
 local EL = CreateFrame("Frame")
-local isInitiated,isEnabled
+local isInitiated,isEnabled,listGeneratedPersonal,listGeneratedGlobal
 local inBags = {}
 
 _G["BINDING_CATEGORY_ES Utilities"] = "ES_Utilities"
@@ -361,7 +361,7 @@ local function loadEntries()
 	end
     generateButtons(tblInit)
 	wipe(tblInit)
-    print('|cff00b4ffES_Utilities: |r|cff00ff00Load completed|r')
+    print('|cff00b4ffES_Utilities: |r|cff00ff00Travel data loaded|r')
 end
 
 local canUseToy = {}
@@ -438,16 +438,15 @@ ESUtilitiesTravelEditmixin = {}
 
 function ESUtilitiesTravelEditmixin:OnLoad()
     self.Header.Text:SetText("Travel Frame")
-	addon.initToys()
 end
 
 function ESUtilitiesTravelEditmixin:OnShow(frame,arg)
 	if arg == "personal" then
 		local val = ESUTIL_DB.travel[addon.charName] and addon.getToyName(ESUTIL_DB.travel[addon.charName]) or "Disabled"
-		frame.Text:SetText(val)
+		frame:SetDefaultText(val)
 	elseif arg == "global" then
 		local val = ESUTIL_DB.travel.global and addon.getToyName(ESUTIL_DB.travel.global) or "Disabled"
-		frame.Text:SetText(val)
+		frame:SetDefaultText(val)
 	elseif arg == "scale" then
 		frame:SetText(ESUTIL_DB.travel.scale)
 	end
@@ -485,33 +484,41 @@ function ESUtilitiesTravelEditmixin:OnAccept()
 end
 
 function ES_Utilities_PersonalTravelDropdown_Load(self)
-	self:SetupMenu(function(dropdown, rootDescription)
-		rootDescription:CreateButton("Disabled", function()
-			CloseDropDownMenus();
-			self:SetDefaultText("Disabled")
-		end)
-		for _,name in pairs(addon.knownToys) do
-			rootDescription:CreateButton(name, function()
+	if not isInitiated then return end
+	if not listGeneratedPersonal then
+		self:SetupMenu(function(dropdown, rootDescription)
+			rootDescription:CreateButton("Disabled", function()
 				CloseDropDownMenus();
-				self:SetDefaultText(name)
+				self:SetDefaultText("Disabled")
 			end)
-		end
-	end)
+			for _,name in pairs(addon.knownToys) do
+				rootDescription:CreateButton(name, function()
+					CloseDropDownMenus();
+					self:SetDefaultText(name)
+				end)
+			end
+		end)
+		listGeneratedPersonal = true
+	end
 end
 
 function ES_Utilities_GlobalTravelDropdown_Load(self)
-	self:SetupMenu(function(dropdown, rootDescription)
-		rootDescription:CreateButton("Disabled", function()
-			CloseDropDownMenus();
-			self:SetDefaultText("Disabled")
-		end)
-		for _,name in pairs(addon.knownToys) do
-			rootDescription:CreateButton(name, function()
+	if not isInitiated then return end
+	if not listGeneratedGlobal then
+		self:SetupMenu(function(dropdown, rootDescription)
+			rootDescription:CreateButton("Disabled", function()
 				CloseDropDownMenus();
-				self:SetDefaultText(name)
+				self:SetDefaultText("Disabled")
 			end)
-		end
-	end)
+			for _,name in pairs(addon.knownToys) do
+				rootDescription:CreateButton(name, function()
+					CloseDropDownMenus();
+					self:SetDefaultText(name)
+				end)
+			end
+		end)
+		listGeneratedGlobal = true
+	end
 end
 
 local function initTravel()
@@ -544,6 +551,7 @@ local function initTravel()
 		loadEntries()
 	end
 	setframeScale()
+	addon.initToys() -- Generate the list of available toys for settings dropdown
 	isInitiated = true
 end
 

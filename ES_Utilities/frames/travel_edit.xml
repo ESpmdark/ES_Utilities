@@ -67,8 +67,8 @@
 				<Scripts>
 	        		<OnShow>
         	    		self:GetParent():OnShow(self, "personal")
+						ES_Utilities_PersonalTravelDropdown_Load(self)
         			</OnShow>
-					<OnLoad function="ES_Utilities_PersonalTravelDropdown_Load"/>
     			</Scripts>
 			</DropdownButton>
 
@@ -89,8 +89,8 @@
 				<Scripts>
 	        		<OnShow>
         	    		self:GetParent():OnShow(self, "global")
+						ES_Utilities_GlobalTravelDropdown_Load(self)
         			</OnShow>
-					<OnLoad function="ES_Utilities_GlobalTravelDropdown_Load"/>
     			</Scripts>
 			</DropdownButton>
 			
