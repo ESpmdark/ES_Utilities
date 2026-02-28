@@ -6,7 +6,6 @@ local defaultDB = {
 	toggles = {
 		vault = false,
 		rewards = false,
-		renown = false,
 		weekly = false,
 		currency = false,
 		autoloot = false,

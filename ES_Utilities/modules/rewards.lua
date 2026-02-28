@@ -5,7 +5,7 @@ local rewardFrame = CreateFrame("Frame", nil, _G["GameMenuFrame"])
 rewardFrame:SetFrameStrata("TOOLTIP")
 rewardFrame:SetSize(10,10)
 rewardFrame:SetPoint("TOPRIGHT", 10, -10)
-local rewardFrametxt, getRenownQuests, rewardFrame_OnShow
+local rewardFrametxt, rewardFrame_OnShow
 
 local function rewardFrame_Init()
 	rewardFrametxt = rewardFrame:CreateFontString(nil, "OVERLAY")
@@ -14,42 +14,6 @@ local function rewardFrame_Init()
 	rewardFrametxt:SetWidth(500)
 	rewardFrametxt:SetText('')
 	rewardFrametxt:SetJustifyH("LEFT")
-
-	getRenownQuests = function()
-		local str = ""
-		for name,info in pairs(addon.currentRenowns) do
-			local tbl = C_MajorFactions.GetRenownLevels(info.fid)
-			local level = 0
-			for j=1,#tbl do
-				if not tbl[j].locked then
-					level = j
-				else
-					break
-				end
-			end
-			local count = 0
-			if level >= 1 then
-				for k=1,level do
-					local tmp = info.id[k]
-					if tmp then
-						for _,v in ipairs(tmp) do
-							if not C_QuestLog.IsQuestFlaggedCompleted(v) then
-								count = count + 1
-							end
-						end
-					end
-				end
-			end
-			if count >= 1 then
-				str = str .. '\n' .. name .. ': ' .. count
-			end
-		end
-		if str ~= "" then
-			str = "- Renown rewards -" .. str
-		end
-		return str
-	end
-
 	rewardFrame_OnShow = function()
 		if not isEnabled then return end
 		local rt = '|cff85ff00Available \nParagon Chest:|r\n\n'
@@ -66,9 +30,6 @@ local function rewardFrame_Init()
 			rt = rt .. '\n\n' -- Make seperators for RenownQuests
 		else
 			rt = ""
-		end
-		if ESUTIL_DB.toggles.renown then
-			rt = rt .. getRenownQuests()
 		end
 		rewardFrametxt:SetText(rt)
 	end

@@ -15,13 +15,6 @@ local description = {
         key = "rewards",
         text = "Paragon Rewards",
         tt = "Will display any available paragon chest on the right side of your ESC menu.",
-        child = {
-	        [1] = {
-                key = "renown",
-                text = "Include renown",
-                tt = "Also show any unclaimed renown reward for the character.\n\n(Crests, Valorstone etc)",
-            },
-        },
     },
 	[4] = {
         key = "currency",

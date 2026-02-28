@@ -46,8 +46,6 @@ local function updateCurrencies()
 		local earned = curr.totalEarned or 0
 		if i == 1 then -- Catalyst
 			tbl[i] = qualColor[i] .. curr.quantity .. '|r |cffbebebe(Catalyst)|r'
-		elseif i == 2 then -- Valorstones
-			tbl[i] = qualColor[i] .. curr.quantity .. '|r |cffbebebe(' .. (curr.maxQuantity - curr.quantity) .. ')|r'
 		else -- Crests
 			tbl[i] = qualColor[i] .. curr.quantity .. '|r '
 			if curr.maxQuantity and curr.maxQuantity > 0 then
