@@ -1,6 +1,6 @@
 local _, addon = ...
 local EL = CreateFrame("Frame")
-local isInitiated,isEnabled,listGeneratedPersonal,listGeneratedGlobal
+local isInitiated,isEnabled,listGeneratedPersonal,listGeneratedGlobal,plumberInstalled
 local inBags = {}
 
 _G["BINDING_CATEGORY_ES Utilities"] = "ES_Utilities"
@@ -311,6 +311,16 @@ local function checkEntryGeneral()
             count = count + 1
 		end
 	end
+	if plumberInstalled then
+		tblInit[1][count] = {
+			name = "Housing",
+			left = "ESUtilities",
+			right = false,
+			type = "macro",
+			id = 0,
+			icon = 7252953
+		}
+	end
 end
 
 local function loadEntries()
@@ -428,9 +438,29 @@ function ES_Utilities_Travel_Toggle()
 	end
 end
 
+local function verifyMacro()
+	if UnitAffectingCombat("player") or InCombatLockdown() then
+		EL:RegisterEvent("PLAYER_REGEN_ENABLED")
+		return
+	end
+	local index = GetMacroIndexByName("ESUtilities")
+	if index > 0 and index <= 120 then
+        return -- Macro exists
+    end
+	local numGeneral, _ = GetNumMacros()
+    if numGeneral >= 120 then
+        print('|cff00b4ffES_Utilities: |r|cffff0000Attempted to create macro, but General tab is full. Free up a space and reload UI.')
+        return
+    end
+	CreateMacro("ESUtilities", 7252953, "#plumber:home", nil)
+end
+
 EL:SetScript("OnEvent", function(self, event, ...)
-	if mainframe:IsVisible() or dungeonframe:IsVisible() then
+	if event == "PLAYER_REGEN_DISABLED" and (mainframe:IsVisible() or dungeonframe:IsVisible()) then
 		toggleShow("hide")
+	elseif event == "PLAYER_REGEN_ENABLED" then
+		EL:UnregisterEvent("PLAYER_REGEN_ENABLED")
+		verifyMacro()
 	end
 end)
 
@@ -558,6 +588,10 @@ end
 addon.toggleTravel = function(enable)
     if enable and not isEnabled then
 		if not isInitiated then
+			if C_AddOns.IsAddOnLoaded("Plumber") then
+				verifyMacro()
+				plumberInstalled = true
+			end
 			initTravel()
 		end
 		EL:RegisterEvent("PLAYER_REGEN_DISABLED")
