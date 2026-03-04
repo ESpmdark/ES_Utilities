@@ -259,8 +259,8 @@ addon.dungeon = {
 		[424142] = "Throne of\nthe Tides",
 		[159901] = "The\nEverbloom",
 		[410080] = "Vortex\nPinnacle",
-		[1254555] = "Pit of\nSaron",
-		[1254557] = "Skyreach", -- 159898 is the original ID from WOD
+		--[1254555] = "Pit of\nSaron",
+		--[1254557] = "Skyreach", -- 159898 is the original ID from WOD
 	},
 	[2] = { -- Legion
 		[424153] = "Black Rook\nHold",
@@ -269,7 +269,7 @@ addon.dungeon = {
 		[393764] = "Halls of\nValor",
 		[410078] = "Neltharion's\nLair",
 		[373262] = "Karazhan",
-		[1254551] = " Seat of the\nTriumvirate",
+		--[1254551] = " Seat of the\nTriumvirate",
 	},
 	[3] = { -- Battle for Azeroth
 		[424187] = "Atal Dazar",
@@ -284,16 +284,16 @@ addon.dungeon = {
 	[4] = { -- Shadowlands
 		[354463] = "Plaguefall",
 		[354468] = "De Other\nSide",
-		--[354465] = "Halls of\nAtonement",
+		[354465] = "Halls of\nAtonement",
 		[354464] = "Mists of\nTirna Scithe",
 		[354462] = "Necrotic\nWake",
 		[354469] = "Sanguine\nDepths",
 		[354466] = "Spires of\nAscension",
 		[354467] = "Theater\nof Pain",
-		--[367416] = "Tazavesh",
+		[367416] = "Tazavesh",
 	},
 	[5] = { -- Dragonflight
-		[393273] = "Algeth'ar\nAcademy",
+		--[393273] = "Algeth'ar\nAcademy",
 		[393267] = "Brackenhide\nHollow",
 		[393283] = "Halls of\nInfusion",
 		[393276] = "Neltharus",
@@ -305,33 +305,31 @@ addon.dungeon = {
 	},
 	[6] = { -- The War Within
 		[445269] = "Stonevault",
-		--[445414] = "Dawnbreaker",
-		--[445417] = "Ara-Kara",
+		[445414] = "Dawnbreaker",
+		[445417] = "Ara-Kara",
 		[445416] = "City of\nThreads",
 		[445443] = "The Rookery",
 		[445440] = "Cinderbrew\nMeadery",
-		--[445444] = "Priory of the\nSacred Flame",
+		[445444] = "Priory of the\nSacred Flame",
 		[445441] = "Darkflame\nCleft",
-		--[1216786] = "Operation:\nFloodgate",
-		--[1237215] = "Eco-Dome\nAl'dani",
+		[1216786] = "Operation:\nFloodgate",
+		[1237215] = "Eco-Dome\nAl'dani",
 	},
 	[7] = { -- Midnight
-		-- First Season old dungeons:
-		-- Algeth'ar Academy, Seat of the Triumvirate, Skyreach, Pit of Saron
-		--//
 		--[1254572] = "Magister's\nTerrace",
 		--[1254400] = "Windrunner\nSpire",
 		--[1254563] = "Nexus Point\nXenas", -- Marked as placeholder, verify later.
 		--[1254559] = "Maisara\nCaverns", -- Marked as placeholder, verify later.
 	},
 	[8] ={ -- Current Season
-		[445417] = "Ara-Kara",
-		[445414] = "Dawnbreaker",
-		[1216786] = "Operation:\nFloodgate",
-		[445444] = "Priory of the\nSacred Flame",
-		[354465] = "Halls of\nAtonement",
-		[367416] = "Tazavesh",
-		[1237215] = "Eco-Dome\nAl'dani",
+		[393273] = "Algeth'ar\nAcademy",
+		[1254551] = " Seat of the\nTriumvirate",
+		[1254557] = "Skyreach",
+		[1254555] = "Pit of\nSaron",
+		[1254572] = "Magister's\nTerrace",
+		[1254400] = "Windrunner\nSpire",
+		[1254563] = "Nexus Point\nXenas",
+		[1254559] = "Maisara\nCaverns",
 	},
 }
 
@@ -355,7 +353,7 @@ addon.wormholes = {
 
 local questRef = {
 	[140192] = {44663, 44184}, -- Dalaran
-	[110560] = {34378, 34586} -- Garrrison  
+	[110560] = {34378, 34586}, -- Garrrison
 }
 
 addon.checkQuest = function(questId)
@@ -372,11 +370,12 @@ addon.general = {
 	[2] = {id = 50977, type = "spell", name = "Death Gate"},
 	[3] = {id = 18960, type = "spell", name = "Moonglade"},
 	[4] = {id = 193753, type = "spell", name = "Dreamwalk"},
-	[5] = {id = 243056, type = "toy", name = "Dornogal"},
-	[6] = {id = 110560, type = "toy", name = "Garrison", quest = true},
-	[7] = {id = 140192, type = "toy", name = "Dalaran", quest = true},
-	[8] = {id = 556, type = "spell", name = "Astral Recall"},
-	[9] = {id = 6948, type = "item", name = "Hearthstone"},
+	[5] = {id = 253629, type = "toy", name = "Arcantina"},
+	[6] = {id = 243056, type = "toy", name = "Dornogal"},
+	[7] = {id = 110560, type = "toy", name = "Garrison", quest = true},
+	[8] = {id = 140192, type = "toy", name = "Dalaran", quest = true},
+	[9] = {id = 556, type = "spell", name = "Astral Recall"},
+	[10] = {id = 6948, type = "item", name = "Hearthstone"},
 }
 
 local list = { -- Toys to check and add for HS override setting
