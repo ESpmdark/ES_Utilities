@@ -178,6 +178,40 @@ local function createToggle(info,child)
     end
 end
 
+local function createChangelog()
+    local panel = _G["ES_Utilities_ConfigScrollFrame"].ScrollChild
+    local config = _G["ES_Utilities_Config"]
+
+    local inset = CreateFrame("Frame", nil, config, "BackdropTemplate")
+    inset:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        edgeSize = 1,
+        insets = { left = 1, right = 1, top = 1, bottom = 1 }
+    })
+    inset:SetBackdropColor(0.05, 0.05, 0.05, 0.5)
+    inset:SetBackdropBorderColor(0.2, 0.2, 0.2, 1)
+    inset:SetPoint("TOPLEFT", config, "TOP", 0, -50)
+    inset:SetPoint("BOTTOMRIGHT", config, "BOTTOMRIGHT", -30, 8)
+
+    local changelog = CreateFrame("Frame", nil, panel)
+    changelog:SetSize(10,10)
+    changelog:SetPoint("TOPLEFT", panel, "TOP", 10, 0)
+    changelog.log = changelog:CreateFontString(nil,"OVERLAY")
+    changelog.log:SetPoint("TOPLEFT", changelog, "TOPLEFT", 0, 0)
+    changelog.log:SetJustifyH("LEFT")
+    changelog.log:SetWordWrap(true)
+    changelog.log:SetFont(addon.font_LiberationSansRegular, 16, "")
+    changelog.log:SetTextColor(.8, .8, .8, .8)
+    changelog.log:SetText(addon.changelog)
+
+    inset:SetScript("OnShow", function(self)
+        changelog.log:SetWidth(inset:GetWidth() - 10)
+        local logHeight = changelog.log:GetStringHeight() + 10
+        panel:SetHeight((yPos * -1) > logHeight and (yPos * -1) or logHeight)
+    end)
+end
+
 local function iterateToggles(info)
     createToggle(info)
     if not info.child then return end
@@ -226,10 +260,7 @@ addon.setupConfig = function()
     for i=1, #description do
         iterateToggles(description[i])
     end
-
-    local panel = _G["ES_Utilities_ConfigScrollFrame"].ScrollChild
-    panel:SetHeight(yPos * -1)
-
+    createChangelog()
     local config = _G["ES_Utilities_Config"]
 	local category, _ = Settings.RegisterCanvasLayoutCategory(config, "ES_Utilities");
 	Settings.RegisterAddOnCategory(category);

@@ -9,6 +9,7 @@
 
 core.lua
 config.lua
+changelog.lua
 modules\modules.xml
 frames\vehicle_edit.xml
 frames\config.xml
