@@ -401,6 +401,7 @@ local events = {
 local EL = CreateFrame("Frame")
 EL:SetScript("OnEvent", function(self, event, msg, playername, ...)
 	if event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" or event == "CHAT_MSG_GUILD" then
+		if issecretvalue(playername) then return end
 		if not (addon.charName == playername) then return end
     	if msg and string.lower(msg) == "!mykeys" then
         	if (event == "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
