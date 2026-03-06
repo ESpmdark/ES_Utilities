@@ -10,7 +10,7 @@ local function toggleLOCart(enable)
     LossOfControlFrame.RedLineTop:SetAlpha(alpha)
 	LossOfControlFrame.RedLineBottom:SetAlpha(alpha)
 	LossOfControlFrame.blackBg:SetSize(xPos,yPos)
-	LossOfControlFrame.TimeLeft:SetAlpha(alpha)
+	LossOfControlFrame.TimeLeft.SecondsText:SetAlpha(alpha)
 end
 
 local function skinExtraQuestButton()
@@ -113,6 +113,7 @@ local function lossofcontrolInit()
         if not loc_Enabled then return end
 		LossOfControlFrame.AbilityName:SetPoint("CENTER", 0, 36)
 		LossOfControlFrame.Icon:SetPoint("CENTER", 0, 0)
+		LossOfControlFrame.TimeLeft:SetPoint("LEFT", LossOfControlFrame, "CENTER", -16, 0)
 	end)
     loc_Initiated = true
 end
