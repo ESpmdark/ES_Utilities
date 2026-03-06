@@ -74,13 +74,17 @@ local function drinkMacroInit()
 end
 
 local function drinkMacroToggle(enable)
-	if enable and not isEnabled then
-		EL:RegisterEvent("PLAYER_REGEN_ENABLED")
-		isEnabled = true
-		addon.updateDrinkMacro()
-	elseif isEnabled then
-		EL:UnregisterEvent("PLAYER_REGEN_ENABLED")
-		isEnabled = false
+	if enable then
+		if not isEnabled then
+			EL:RegisterEvent("PLAYER_REGEN_ENABLED")
+			isEnabled = true
+			addon.updateDrinkMacro()
+		end
+	else
+		if isEnabled then
+			EL:UnregisterEvent("PLAYER_REGEN_ENABLED")
+			isEnabled = false
+		end
 	end
 end
 
