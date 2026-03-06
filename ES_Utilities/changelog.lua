@@ -3,6 +3,11 @@ local _, addon = ...
 addon.changelog = [=[
 Changelog:
 
+# 2.1.8
+- Use the timer text for LossOfControl icon.
+- Ignore chat message if it contains a secret value.
+- Fix drinkmacro settings.
+
 # 2.1.7
 - Added changelog ingame.
 
