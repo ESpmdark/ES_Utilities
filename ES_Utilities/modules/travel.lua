@@ -70,9 +70,10 @@ local function createNewButton(txt,left,type,right,icon,xPos,yPos,dungeon)
 		btn:SetAttribute("type2", type)
 		btn:SetAttribute(type.."2", right)
 	end
-	btn:SetScript("PostClick", function()
-       	mainframe:Hide()
-       	dungeonframe:Hide()
+	btn:SetScript("PostClick", function(self,button,down)
+		if not down then
+			self:GetParent():Hide()
+		end
 	end)
 	return btn
 end
