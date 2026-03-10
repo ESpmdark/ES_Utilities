@@ -3,6 +3,9 @@ local _, addon = ...
 addon.changelog = [=[
 Changelog:
 
+# 2.1.9
+- Fix an issue with the travelframe hiding too early.
+
 # 2.1.8
 - Use the timer text for LossOfControl icon.
 - Ignore chat message if it contains a secret value.
