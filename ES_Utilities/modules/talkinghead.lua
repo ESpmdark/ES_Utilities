@@ -12,16 +12,18 @@ local whitelist = { -- Warmode Airdrops
 		"Looks like you could all use some resources."
 	},
 	["Ruffious"] = { -- War Within
-		-- These are verified:		
 		"Looks like there's treasure nearby.",
 		"Opportunity's knocking!",
 		"I see some valuable resources in the area!",
 		"There's a cache of resources nearby.",
-
-
-		-- Have not seen these yet so keeping them in just incase:
-		"Time to prove you're as hard-headed as the rams! Bust that cache open and claim the reward!", --Airdrop? Unverified, but likely is.
-		"Nothing ventured, nothing gained! Fight back the shadows and claim what they've been hiding!", --Unused WQ-beginning?
+	},
+	["Vidious"] ={ -- Midnight
+		"You like goods don't you? Then find them.",
+		"Keep an eye out for opportunities for loot when they arise, like now!",
+	},
+	["Ziadan"] ={ -- Midnight
+		"Take the early advantage and get your spoils.",
+		"That looks like a treasure out in the distance. Don't miss this opportunity",
 	},
 }
 local function talkingHeadInit()
