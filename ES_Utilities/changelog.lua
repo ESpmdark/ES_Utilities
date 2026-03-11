@@ -3,6 +3,11 @@ local _, addon = ...
 addon.changelog = [=[
 Changelog:
 
+# 2.1.10
+- Add new mage teleport/portal.
+- Add verified entries for Midnight airdrop whitelist.
+- New module: Autogossip
+
 # 2.1.9
 - Fix an issue with the travelframe hiding too early.
 
