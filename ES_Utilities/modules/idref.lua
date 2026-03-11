@@ -230,6 +230,7 @@ addon.ports = { -- Mage Teleports/Portals
 	[21] = {port = 344597, tele = 344587, name = "Oribos"},
 	[22] = {port = 395289, tele = 395277, name = "Valdrakken"},
 	[23] = {port = 446534, tele = 446540, name = "Dornogal"},
+	[24] = {port = 1259194, tele = 1259190, name = "Silvermoon\nMidnight"},
 }
 
 addon.mainTitle = { -- Category titles for main window
