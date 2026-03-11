@@ -3,6 +3,9 @@ local _, addon = ...
 addon.changelog = [=[
 Changelog:
 
+# 2.1.11
+- Pause autogossip while dialog window is open to avoid endless loop.
+
 # 2.1.10
 - Add new mage teleport/portal.
 - Add verified entries for Midnight airdrop whitelist.

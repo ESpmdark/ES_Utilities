@@ -8,8 +8,17 @@ local skipEvents = {
 	["GOSSIP_CONFIRM"] = true,
 }
 
+local function activePopup()
+	local anyVisible = false
+	StaticPopup_ForEachShownDialog(function()
+		anyVisible = true
+	end)
+	return anyVisible
+end
+
 local EL = CreateFrame("Frame")
 EL:SetScript("OnEvent", function(self, event, ...)
+	if activePopup() then return end
 	local tbl = C_GossipInfo.GetOptions()
 	local skip,quest
 	for i=1,#tbl do
