@@ -13,4 +13,5 @@
 <Script file="vehiclehud.lua"/>
 <Script file="talent.lua"/>
 <Script file="travel.lua"/>
+<Script file="autogossip.lua"/>
 </Ui>

@@ -20,6 +20,7 @@ local defaultDB = {
 		vehicleedit = false,
 		talent = false,
 		travel = false,
+		autogossip = false,
 	},
 	last = {
 		monthDay = 1,
@@ -121,6 +122,8 @@ addon.toggleSettings = function(dbkey, enabled)
 		addon.toggleTalent(enabled)
 	elseif dbkey == "travel" then
 		addon.toggleTravel(enabled)
+	elseif dbkey == "autogossip" then
+		addon.toggleAutoGossip(enabled)
 	end
 end
 
@@ -128,7 +131,7 @@ local function InitializeAddon()
 	local pFirst,_ = UnitName("player")
 	addon.charName = pFirst .. '-' .. GetRealmName()
 	ESUTIL_DB = ESUTIL_DB or defaultDB
-	
+
 	for k,v in pairs(defaultDB) do
 		if not (k == "chars") then
 			if ESUTIL_DB[k] == nil then

@@ -85,6 +85,11 @@ local description = {
         text = "Travel frame",
         tt = 'Adds a panel that contains a set of travel spells/toys for easy access.\n\nKeybind to toggle this panel can be set in Blizzards own keybind settings, in the category "ES_Utilities".',
     },
+    [14] = {
+        key = "autogossip",
+        text = "Auto select quest gossip",
+        tt = 'Automaticly selects gossip to progress your quest.\nWill always prefer to select options marked as "Skip".',
+    },
 }
 
 local function createResetButton(parent)
