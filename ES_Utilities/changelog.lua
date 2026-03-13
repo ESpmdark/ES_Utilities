@@ -3,6 +3,9 @@ local _, addon = ...
 addon.changelog = [=[
 Changelog:
 
+# 2.1.12
+- Fix for VechileHUD padding when only one ability exist.
+
 # 2.1.11
 - Pause autogossip while dialog window is open to avoid endless loop.
 
