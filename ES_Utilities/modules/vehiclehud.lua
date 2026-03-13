@@ -106,14 +106,15 @@ local function updateDisplay(isEditmode)
 	end
 	local padding = 4
 	local count = 0
-	local notPrevious
+	local notPrevious,notEmpty
 	for i=1,12 do
 		if main[i]:IsVisible() then
-			local extrapadding = notPrevious and 20 or 0
+			local extrapadding = notEmpty and notPrevious and 20 or 0
 			padding = padding + extrapadding
 			main[i]:SetPoint("LEFT", main, "LEFT", padding + (count * (ESUTIL_DB.vehiclehud.iconsize + 2)), 0)
 			count = count + 1
 			notPrevious = false
+			notEmpty = true
 		else
 			notPrevious = true
 		end
