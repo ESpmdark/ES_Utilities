@@ -183,6 +183,7 @@ local function createToggle(info,child)
     end
 end
 
+local updateChangelog
 local function createChangelog()
     local panel = _G["ES_Utilities_ConfigScrollFrame"].ScrollChild
     local config = _G["ES_Utilities_Config"]
@@ -208,12 +209,37 @@ local function createChangelog()
     changelog.log:SetWordWrap(true)
     changelog.log:SetFont(addon.font_LiberationSansRegular, 16, "")
     changelog.log:SetTextColor(.8, .8, .8, .8)
-    changelog.log:SetText(addon.changelog)
 
-    inset:SetScript("OnShow", function(self)
+    updateChangelog = function(showall)
+        changelog.log:SetText(addon.changelog(showall,inset))
         changelog.log:SetWidth(inset:GetWidth() - 10)
         local logHeight = changelog.log:GetStringHeight() + 10
         panel:SetHeight((yPos * -1) > logHeight and (yPos * -1) or logHeight)
+    end
+
+    inset:SetScript("OnShow", function(self)
+        updateChangelog()
+    end)
+
+    local b = CreateFrame("Button", nil, config, "UIPanelButtonTemplate")
+    b:SetPoint("TOPRIGHT", config, "TOPRIGHT", -8, -8)
+    b:RegisterForClicks("AnyUp")
+    b:SetSize(80,24)
+    b:SetText("Changelog")
+    b:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+			GameTooltip:SetText("Left click: Show entire history.\nRight click: Mark all as read.", 1, 0.8, 0, 1, true)
+    end)
+    b:SetScript("OnLeave", function(self)
+            GameTooltip:Hide()
+    end)
+    b:SetScript("OnClick", function(self, button)
+        if button == "LeftButton" then
+            updateChangelog(true)
+        else
+            addon.markAsRead()
+            updateChangelog()
+        end
     end)
 end
 

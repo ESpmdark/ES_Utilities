@@ -30,6 +30,7 @@ local defaultDB = {
 		hour = 00,
 		year = 1999,
 	},
+	readChangeLog = 1,
 	reset = 999999,
 	chars = {},
 	drinkmacro = {
