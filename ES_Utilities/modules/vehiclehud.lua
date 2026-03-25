@@ -7,14 +7,6 @@ local eventList = {
 	["UPDATE_OVERRIDE_ACTIONBAR"] = true,
 	["UPDATE_POSSESS_BAR"] = true,
 }
-local updateEvents = {
-	["ACTION_RANGE_CHECK_UPDATE"] = true,
-	["ACTION_USABLE_CHANGED"] = true,
-	["ACTIONBAR_SLOT_CHANGED"] = true,
-	["ACTIONBAR_UPDATE_COOLDOWN"] = true,
-	["ACTIONBAR_UPDATE_STATE"] = true,
-	["ACTIONBAR_UPDATE_USABLE"] = true,
-}
 
 local ref = {
 	vehicle = { -- Priest MC and certain vehicles and questobjects
@@ -68,10 +60,6 @@ local function fetchTooltip(idx)
 end
 
 local function updateActions()
-	if delayTimer then
-		delayTimer:Cancel()
-		delayTimer = nil
-	end
 	if not ref[isVisible] then return end
 	table.wipe(activeButtons)
 	for i=1,12 do
@@ -81,18 +69,21 @@ local function updateActions()
         if id then
 			activeButtons[i] = action
 			local cooldown = C_ActionBar.GetActionCooldown(action)
-			local isUsable, _ = C_ActionBar.IsUsableAction(action)
 			main[i]:Show()
-			main[i].overlay:Hide()
-			main[i].icon:SetDesaturated(false)
 			main[i].charge:SetText(C_ActionBar.GetActionDisplayCount(id))
-			
-			if not isUsable then
+			if cooldown.isActive then
 				main[i].overlay:Show()
 				main[i].icon:SetDesaturated(true)
+				local durObj = C_ActionBar.GetActionCooldownDuration(action)
+				if durObj then
+					main[i].cd:SetCooldownFromDurationObject(durObj)
+				end
+			else
+				main[i].overlay:Hide()
+				main[i].icon:SetDesaturated(false)
+				main[i].cd:Clear()
+
 			end
-			main[i].cd:SetCooldown(cooldown.startTime, cooldown.duration)
-			
 			main[i].icon:SetTexture(icon)
 		else
 			main[i]:Hide()
@@ -121,6 +112,7 @@ local function updateDisplay(isEditmode)
 	end
 	if count > 0 then
 		main:SetWidth(2 + padding  + (count * (ESUTIL_DB.vehiclehud.iconsize + 2)))
+		main:SetAlpha(1)
 	end
 end
 
@@ -146,16 +138,15 @@ local function updateShownState()
 		isVisible = nil
 	end	
 	if isVisible then
+		delayTimer = delayTimer or C_Timer.NewTicker(0.2, function() updateDisplay() end)
+		main:SetAlpha(0)
 		main:Show()
-		updateDisplay()
-		for e,_ in pairs(updateEvents) do
-			EL:RegisterEvent(e)
-		end
 	else
-		main:Hide()
-		for e,_ in pairs(updateEvents) do
-			EL:UnregisterEvent(e)
+		if delayTimer then
+			delayTimer:Cancel()
+			delayTimer = nil
 		end
+		main:Hide()
 		for i=1,12 do
 			main[i]:Hide()
 		end
@@ -329,13 +320,6 @@ EL:SetScript("OnEvent", function(self, event, ...)
 			isVisible = nil
 		end
 		updateShownState()
-	elseif updateEvents[event] then
-		if editmode then return end
-		if delayTimer then
-			delayTimer:Cancel()
-			delayTimer = nil
-		end
-		delayTimer = C_Timer.NewTimer(0.1, function() updateDisplay() end)
 	end
 end)
 

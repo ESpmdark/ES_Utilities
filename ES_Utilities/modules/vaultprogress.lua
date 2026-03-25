@@ -1,5 +1,5 @@
 local _, addon = ...
-local isInitiated,isEnabled,tickerTimer,weeklyScheduled,displayFrame,txt,txt1,affix1,affix2,affix3,affix4,affixesLoaded,bTop,bBot,bLeft,bRight
+local isInitiated,isEnabled,tickerTimer,weeklyScheduled,displayFrame,txt,txt1,affix1,affix2,affix3,affix4,affix5,affixesLoaded,bTop,bBot,bLeft,bRight
 
 local function updateAffixIcons(tt,success)
 	if success then
@@ -35,14 +35,22 @@ local function updateAffixIcons(tt,success)
 		affix4:SetScript("OnLeave", function(self)
 			GameTooltip:Hide()
 		end)
+		affix5.t:SetTexture(tt[5]["i"])
+		affix5:SetScript("OnEnter", function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+			GameTooltip:SetText(tt[5]["t"], 1, 0.8, 0, 1, true)
+		end)
+		affix5:SetScript("OnLeave", function(self)
+			GameTooltip:Hide()
+		end)
 		affixesLoaded = true
 	else
-		affix2.t:SetTexture("Interface\\EncounterJournal\\UI-EJ-WarningTextIcon")
-		affix2:SetScript("OnEnter", function(self)
+		affix3.t:SetTexture("Interface\\EncounterJournal\\UI-EJ-WarningTextIcon")
+		affix3:SetScript("OnEnter", function(self)
 			GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
 			GameTooltip:SetText('Could not retrieve affix data.\n\nWill attempt again next time you show the display.')
 		end)
-		affix2:SetScript("OnLeave", function(self)
+		affix3:SetScript("OnLeave", function(self)
 			GameTooltip:Hide()
 		end)
 	end
@@ -66,27 +74,33 @@ local function createProgressDisplay()
 
 	affix1 = CreateFrame("Frame", nil, displayFrame)
 	affix1:SetSize(24,24)
-	affix1:SetPoint("TOPRIGHT", displayFrame, "TOP", -26, -6)
+	affix1:SetPoint("TOP", displayFrame, "TOP", -52, -6)
 	affix1.t = affix1:CreateTexture()
 	affix1.t:SetAllPoints()
 
 	affix2 = CreateFrame("Frame", nil, displayFrame)
 	affix2:SetSize(24,24)
-	affix2:SetPoint("TOPRIGHT", displayFrame, "TOP", -1, -6)
+	affix2:SetPoint("TOP", displayFrame, "TOP", -26, -6)
 	affix2.t = affix2:CreateTexture()
 	affix2.t:SetAllPoints()
 
 	affix3 = CreateFrame("Frame", nil, displayFrame)
 	affix3:SetSize(24,24)
-	affix3:SetPoint("TOPLEFT", displayFrame, "TOP", 1, -6)
+	affix3:SetPoint("TOP", displayFrame, "TOP", 0, -6)
 	affix3.t = affix3:CreateTexture()
 	affix3.t:SetAllPoints()
 
 	affix4 = CreateFrame("Frame", nil, displayFrame)
 	affix4:SetSize(24,24)
-	affix4:SetPoint("TOPLEFT", displayFrame, "TOP", 26, -6)
+	affix4:SetPoint("TOP", displayFrame, "TOP", 26, -6)
 	affix4.t = affix4:CreateTexture()
 	affix4.t:SetAllPoints()
+
+	affix5 = CreateFrame("Frame", nil, displayFrame)
+	affix5:SetSize(24,24)
+	affix5:SetPoint("TOP", displayFrame, "TOP", 52, -6)
+	affix5.t = affix5:CreateTexture()
+	affix5.t:SetAllPoints()
 
 	bTop = displayFrame:CreateTexture()
 	bTop:SetPoint("BOTTOMLEFT", displayFrame, "TOPLEFT", -1, -1)
@@ -322,12 +336,17 @@ local function displayFrame_Show()
 	if not affixesLoaded then
 		local afx = C_MythicPlus.GetCurrentAffixes()
 		if afx and (#afx >= 1) then
-			local lvl = {[1]=4,[2]=7,[3]=10,[4]=12}
-			local afDt = {[1]={t="",i=0},[2]={t="",i=0},[3]={t="",i=0},[4]={t="",i=0}}
+			-- New +2 affix "guidance". Might need to deal with that one
+			-- its not something we care about, so if it shows up we need to ignore it
+			
+			local lvl = {[1]=2,[2]=5,[3]=7,[4]=10,[5]=12}
+			local afDt = {}
 			for i=1,#afx do
 				local name, description, icon = C_ChallengeMode.GetAffixInfo(afx[i].id)
-				afDt[i].t = '|cffffffff' .. name .. '|r |cff00bcff(+' .. lvl[i] .. ')|r\n\n' .. description
-				afDt[i].i = icon
+				afDt[i] = {
+					t = '|cffffffff' .. name .. '|r |cff00bcff(+' .. (lvl[i] or "N/A") .. ')|r\n\n' .. description,
+					i = icon
+				}
 			end
 			updateAffixIcons(afDt, true)
 		else
@@ -382,11 +401,6 @@ local function vaultProgressInit()
 	if not C_AddOns.IsAddOnLoaded("Blizzard_WeeklyRewards") then
 		C_AddOns.LoadAddOn("Blizzard_WeeklyRewards")
 	end
-	--if not (UnitAffectingCombat("player") or InCombatLockdown()) then
-		--ShowUIPanel(WeeklyRewardsFrame)
-		--HideUIPanel(WeeklyRewardsFrame)
-		-- Is this completely wasted crap that I added early on when I didnt understand how to ensure dataloading? Keeping it commented out for a while to see if it has any impact.
-	--end
 	checkWeeklyReset()
 	addon.checkCharEntry()
 end

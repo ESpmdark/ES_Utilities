@@ -319,8 +319,8 @@ addon.dungeon = {
 	[7] = { -- Midnight
 		--[1254572] = "Magister's\nTerrace",
 		--[1254400] = "Windrunner\nSpire",
-		--[1254563] = "Nexus Point\nXenas", -- Marked as placeholder, verify later.
-		--[1254559] = "Maisara\nCaverns", -- Marked as placeholder, verify later.
+		--[1254563] = "Nexus Point\nXenas",
+		--[1254559] = "Maisara\nCaverns",
 	},
 	[8] ={ -- Current Season
 		[393273] = "Algeth'ar\nAcademy",

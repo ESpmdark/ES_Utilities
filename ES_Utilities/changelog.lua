@@ -1,6 +1,11 @@
 local _, addon = ...
 
 local changelog = {
+    [27] = [=[
+# 2.2.1
+- Updated VehicleHUD to respect recent hotfix for secret values.
+- Added new affix to Vaultprogress infopanel.
+    ]=],
     [26] = [=[
 # 2.2.0
 - Changelog improvements.
