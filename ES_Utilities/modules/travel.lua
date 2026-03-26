@@ -15,6 +15,7 @@ mainframe.dng:SetPoint("CENTER",mainframe,"TOPRIGHT",-8,-8)
 mainframe.dng:SetNormalAtlas("TaxiNode_Continent_Neutral")
 mainframe.dng:SetHighlightAtlas("TaxiNode_Continent_Alliance")
 mainframe.dng:SetPushedAtlas("TaxiNode_Continent_Alliance")
+tinsert(UISpecialFrames, "ES_Utilities_TravelMain")
 
 local dungeonframe = CreateFrame("Frame","ES_Utilities_TravelDungeon", UIParent, "TooltipBorderedFrameTemplate")
 dungeonframe:SetPoint("CENTER",UIParent,"CENTER",0,0)
@@ -26,6 +27,7 @@ dungeonframe.ret:SetPoint("CENTER",dungeonframe,"TOPRIGHT",-8,-8)
 dungeonframe.ret:SetNormalAtlas("poi-traveldirections-arrow2")
 dungeonframe.ret:SetHighlightAtlas("poi-traveldirections-arrow")
 dungeonframe.ret:SetPushedAtlas("poi-traveldirections-arrow2")
+tinsert(UISpecialFrames, "ES_Utilities_TravelDungeon")
 
 local width,height = 80, 80
 local padding = 16
