@@ -1,6 +1,10 @@
 local _, addon = ...
 
 local changelog = {
+    [28] = [=[
+# 2.2.2
+- New option for Random Hearthstone toy. Will pick from any of your known toys.
+    ]=],
     [27] = [=[
 # 2.2.1
 - Updated VehicleHUD to respect recent hotfix for secret values.

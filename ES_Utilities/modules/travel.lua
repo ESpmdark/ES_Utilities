@@ -1,6 +1,6 @@
 local _, addon = ...
 local EL = CreateFrame("Frame")
-local isInitiated,isEnabled,listGeneratedPersonal,listGeneratedGlobal,plumberInstalled
+local isInitiated,isEnabled,listGeneratedPersonal,listGeneratedGlobal,plumberInstalled,randomButton
 local inBags = {}
 
 _G["BINDING_CATEGORY_ES Utilities"] = "ES_Utilities"
@@ -46,6 +46,10 @@ local function createNewButton(txt,left,type,right,icon,xPos,yPos,dungeon)
 	btn.cd:SetDrawEdge(false)
 	btn.cd:SetDrawBling(false)
 	btn.cd:SetAllPoints()
+	if icon == 1669485 then -- Icon used for randomButton
+		randomButton = btn
+		randomButton.type = type
+	end
 	local bg = btn:CreateTexture(nil, "BACKGROUND")
 	bg:SetPoint("TOPLEFT", 2, -2)
 	bg:SetPoint("BOTTOMRIGHT", -2, 2)
@@ -229,7 +233,22 @@ local function updateCooldowns(frame)
 	end
 end
 
+local function setRandomHearthstone()
+	local tbl = {}
+	local count = 0
+	for _,id in pairs(addon.knownReversed) do
+		count = count + 1
+		tbl[count] = id
+	end
+	local id = tbl[math.random(1, count)]
+	randomButton:SetAttribute(randomButton.type, id)
+	randomButton.id = id
+end
+
 mainframe:SetScript("OnShow", function(self)
+	if randomButton then
+		setRandomHearthstone()
+	end
 	updateCooldowns(self)
 end)
 
@@ -253,17 +272,31 @@ local function checkEntryGeneral()
     local custID = customOverride()
     local h = addon.general
     local count = 1
-    if custID and PlayerHasToy(custID) then
-        local icon, _ = select(5,GetItemInfoInstant(custID))
-        tblInit[1][count] = {
-			name = "Hearthstone",
-			left = custID,
-			right = false,
-			type = "toy",
-			id = custID,
-			icon = icon
-		}
-        count = 2
+    if custID then
+		if custID == "Random" then
+    	    tblInit[1][count] = {
+				name = "Hearthstone",
+				left = 0,
+				right = false,
+				type = "toy",
+				id = 0,
+				icon = 1669485
+			}
+	        count = 2
+		elseif PlayerHasToy(custID) then
+        	local icon, _ = select(5,GetItemInfoInstant(custID))
+    	    tblInit[1][count] = {
+				name = "Hearthstone",
+				left = custID,
+				right = false,
+				type = "toy",
+				id = custID,
+				icon = icon
+			}
+	        count = 2
+		else
+			custID = false
+		end
     else
         custID = false
     end
@@ -497,14 +530,21 @@ function ESUtilitiesTravelEditmixin:OnAccept()
 	local scale = tonumber(self.Scale.EditBox:GetText()) or ESUTIL_DB.travel.scale or 1
 	local personal = self.PersonalDropdown.Text:GetText()
 	local global = self.GlobalDropdown.Text:GetText()
-
 	if personal and personal ~= "Disabled" then
-		ESUTIL_DB.travel[addon.charName] = addon.knownReversed[personal]
+		if personal == "Random" then
+			ESUTIL_DB.travel[addon.charName] = "Random"
+		else
+			ESUTIL_DB.travel[addon.charName] = addon.knownReversed[personal]
+		end
 	else
 		ESUTIL_DB.travel[addon.charName] = nil
 	end
 	if global and global ~= "Disabled" then
-		ESUTIL_DB.travel.global = addon.knownReversed[global]
+		if global == "Random" then
+			ESUTIL_DB.travel.global = "Random"
+		else
+			ESUTIL_DB.travel.global = addon.knownReversed[global]
+		end
 	else
 		ESUTIL_DB.travel.global = nil
 	end
@@ -514,14 +554,22 @@ function ESUtilitiesTravelEditmixin:OnAccept()
 	self:Hide()
 end
 
+local staticChoices = {
+	[1] = "Disabled",
+	[2] = "Random",
+}
+
 function ES_Utilities_PersonalTravelDropdown_Load(self)
 	if not isInitiated then return end
 	if not listGeneratedPersonal then
 		self:SetupMenu(function(dropdown, rootDescription)
-			rootDescription:CreateButton("Disabled", function()
-				CloseDropDownMenus();
-				self:SetDefaultText("Disabled")
-			end)
+			for i=1,#staticChoices do
+				local name = staticChoices[i]
+				rootDescription:CreateButton(name, function()
+					CloseDropDownMenus();
+					self:SetDefaultText(name)
+				end)
+			end
 			for _,name in pairs(addon.knownToys) do
 				rootDescription:CreateButton(name, function()
 					CloseDropDownMenus();
@@ -537,10 +585,13 @@ function ES_Utilities_GlobalTravelDropdown_Load(self)
 	if not isInitiated then return end
 	if not listGeneratedGlobal then
 		self:SetupMenu(function(dropdown, rootDescription)
-			rootDescription:CreateButton("Disabled", function()
-				CloseDropDownMenus();
-				self:SetDefaultText("Disabled")
-			end)
+			for i=1,#staticChoices do
+				local name = staticChoices[i]
+				rootDescription:CreateButton(name, function()
+					CloseDropDownMenus();
+					self:SetDefaultText(name)
+				end)
+			end
 			for _,name in pairs(addon.knownToys) do
 				rootDescription:CreateButton(name, function()
 					CloseDropDownMenus();
