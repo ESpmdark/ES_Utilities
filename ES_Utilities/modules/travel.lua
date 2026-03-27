@@ -15,6 +15,12 @@ mainframe.dng:SetPoint("CENTER",mainframe,"TOPRIGHT",-8,-8)
 mainframe.dng:SetNormalAtlas("TaxiNode_Continent_Neutral")
 mainframe.dng:SetHighlightAtlas("TaxiNode_Continent_Alliance")
 mainframe.dng:SetPushedAtlas("TaxiNode_Continent_Alliance")
+mainframe.warning = mainframe:CreateFontString(nil, "OVERLAY")
+mainframe.warning:SetPoint("TOPLEFT", 18, -120)
+mainframe.warning:SetFont("Fonts\\ARIALN.TTF", 24, "OUTLINE")
+mainframe.warning:SetTextColor(1,.4,.4,1)
+mainframe.warning:SetText("Could not find a Hearthstone in your bags!")
+mainframe.warning:SetAlpha(0)
 tinsert(UISpecialFrames, "ES_Utilities_TravelMain")
 
 local dungeonframe = CreateFrame("Frame","ES_Utilities_TravelDungeon", UIParent, "TooltipBorderedFrameTemplate")
@@ -247,17 +253,6 @@ local function setRandomHearthstone()
 	randomButton.id = id
 end
 
-mainframe:SetScript("OnShow", function(self)
-	if randomButton then
-		setRandomHearthstone()
-	end
-	updateCooldowns(self)
-end)
-
-dungeonframe:SetScript("OnShow", function(self)
-	updateCooldowns(self)
-end)
-
 local GetItemInfoInstant = C_Item.GetItemInfoInstant
 
 local function customOverride()
@@ -267,6 +262,23 @@ local function customOverride()
 		return ESUTIL_DB.travel.global and ESUTIL_DB.travel.global or false
 	end
 end
+
+mainframe:SetScript("OnShow", function(self)
+	if randomButton then
+		setRandomHearthstone()
+	elseif not customOverride() then
+		if addon.currentInventory(6948) then
+			mainframe.warning:SetAlpha(0)
+		else
+			mainframe.warning:SetAlpha(1)
+		end
+	end
+	updateCooldowns(self)
+end)
+
+dungeonframe:SetScript("OnShow", function(self)
+	updateCooldowns(self)
+end)
 
 local tblInit = {[1]={},[2]={},[3]={},[4]={}}
 
@@ -334,7 +346,7 @@ local function checkEntryGeneral()
 				}
                 count = count + 1
 			end
-		elseif not custID and h[i].id == 6948 and inBags[6948] then
+		elseif not custID and h[i].id == 6948 then
 			local icon, _ = select(5,GetItemInfoInstant(h[i].id))
 			tblInit[1][count] = {
 				name = h[i].short or h[i].name,

@@ -1,6 +1,11 @@
 local _, addon = ...
 
 local changelog = {
+    [29] = [=[
+# 2.2.3
+- Travel frames can now also be closed by pressing ESC.
+- Travel frame now defaults to Hearthstone item if no option is selected, and warns the user if item is missing.
+    ]=],
     [28] = [=[
 # 2.2.2
 - New option for Random Hearthstone toy. Will pick from any of your known toys.
