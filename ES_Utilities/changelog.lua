@@ -1,6 +1,10 @@
 local _, addon = ...
 
 local changelog = {
+    [30] = [=[
+# 2.2.4
+- Random Hearthstone now features settings to enable or disable specific toys.
+    ]=],
     [29] = [=[
 # 2.2.3
 - Travel frames can now also be closed by pressing ESC.

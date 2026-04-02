@@ -429,6 +429,7 @@ addon.initToys = function()
 	for k,v in pairs(list) do
 		if PlayerHasToy(k) then
 			addon.knownToys[k] = v
+			ESUTIL_DB.travel.random[k] = ESUTIL_DB.travel.random[k] or 1
 		end
 	end
 	local sorted = {}

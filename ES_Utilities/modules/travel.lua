@@ -241,16 +241,40 @@ local function updateCooldowns(frame)
 	end
 end
 
+local randomList,randomCount,randomTable
 local function setRandomHearthstone()
-	local tbl = {}
-	local count = 0
-	for _,id in pairs(addon.knownReversed) do
-		count = count + 1
-		tbl[count] = id
+	if not randomList then
+		randomList = {}
+		randomTable = {}
+		randomCount = 0
+		for _,id in pairs(addon.knownReversed) do
+			if ESUTIL_DB.travel.random[id] == 1 then
+				randomCount = randomCount + 1
+				randomList[randomCount] = id
+				randomTable[id] = true
+			end
+		end
 	end
-	local id = tbl[math.random(1, count)]
+	local id = randomList[math.random(1, randomCount)]
 	randomButton:SetAttribute(randomButton.type, id)
 	randomButton.id = id
+end
+
+function ES_Utilities_TravelRandomDropdown(button)
+    MenuUtil.CreateContextMenu(button, function(owner, rootDescription)
+        rootDescription:CreateTitle("Enable/disable toys")
+        for _, name in ipairs(addon.knownToys) do
+			local id = addon.knownReversed[name]
+            rootDescription:CreateCheckbox(
+				name,
+                function() return ESUTIL_DB.travel.random[id] == 1 end,
+                function() 
+                    local newValue = (ESUTIL_DB.travel.random[id] == 1) and 0 or 1
+                    ESUTIL_DB.travel.random[id] = newValue
+                end
+            )
+        end
+    end)
 end
 
 local GetItemInfoInstant = C_Item.GetItemInfoInstant

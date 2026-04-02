@@ -93,7 +93,37 @@
         			</OnShow>
     			</Scripts>
 			</DropdownButton>
-			
+
+			<Button name="enabledisable" inherits="UIPanelButtonTemplate">
+    			<Size x="28" y="28"/>
+    			<Anchors>
+					<Anchor point="TOPRIGHT" x="-16" y="-16"/>
+    			</Anchors>
+			    <Layers>
+        			<Layer level="ARTWORK">
+            			<Texture parentKey="Icon" file="Interface\Buttons\UI-OptionsButton">
+                			<Size x="16" y="16"/>
+                			<Anchors>
+                    			<Anchor point="CENTER"/>
+                			</Anchors>
+            			</Texture>
+        			</Layer>
+    			</Layers>
+    			<Scripts>
+					<OnEnter>
+            			GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            			GameTooltip:SetText("Enable/disable", 1, 1, 1); -- Header text in white
+            			GameTooltip:AddLine("Select from the list of known toys which can be used by the random hearthstone.", nil, nil, nil, true);
+            			GameTooltip:Show();
+        			</OnEnter>
+        			<OnLeave>
+            			GameTooltip:Hide();
+        			</OnLeave>
+        			<OnClick>
+            			ES_Utilities_TravelRandomDropdown(self)
+        			</OnClick>
+    			</Scripts>
+			</Button>
 			<Button parentKey="AcceptButton" inherits="UIPanelButtonTemplate" text="ACCEPT">
 				<Anchors>
 					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" relativeKey="$parent.ContentArea" x="-5" y="16"/>

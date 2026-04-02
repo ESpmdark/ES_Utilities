@@ -47,6 +47,7 @@ local defaultDB = {
 	talentbuilds = {},
 	travel = {
 		scale = 1,
+		random = {}
 	}
 }
 
