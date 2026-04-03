@@ -544,10 +544,10 @@ end
 
 function ESUtilitiesTravelEditmixin:OnShow(frame,arg)
 	if arg == "personal" then
-		local val = ESUTIL_DB.travel[addon.charName] and addon.getToyName(ESUTIL_DB.travel[addon.charName]) or "Disabled"
+		local val = ESUTIL_DB.travel[addon.charName] and addon.getToyName(ESUTIL_DB.travel[addon.charName]) or ESUTIL_DB.travel[addon.charName] and "Random" or "Disabled"
 		frame:SetDefaultText(val)
 	elseif arg == "global" then
-		local val = ESUTIL_DB.travel.global and addon.getToyName(ESUTIL_DB.travel.global) or "Disabled"
+		local val = ESUTIL_DB.travel.global and addon.getToyName(ESUTIL_DB.travel.global) or ESUTIL_DB.travel.global and "Random" or "Disabled"
 		frame:SetDefaultText(val)
 	elseif arg == "scale" then
 		frame:SetText(ESUTIL_DB.travel.scale)

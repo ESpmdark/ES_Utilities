@@ -1,6 +1,10 @@
 local _, addon = ...
 
 local changelog = {
+    [31] = [=[
+# 2.2.5
+- Minor settings fix to accomidate the random option.
+    ]=],
     [30] = [=[
 # 2.2.4
 - Random Hearthstone now features settings to enable or disable specific toys.
