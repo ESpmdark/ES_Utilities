@@ -280,7 +280,8 @@ addon.dungeon = {
 		[464256] = "Siege of\nBoralus", --Horde
 		[410074] = "Underrot",
 		[424167] = "Waycrest\nManor",
-		[467555] = "The\nMOTHERLODE!!",
+		[467553] = "The\nMOTHERLODE!!", --Alliance
+		[467555] = "The\nMOTHERLODE!!", --Horde
 	},
 	[4] = { -- Shadowlands
 		[354463] = "Plaguefall",
@@ -321,6 +322,10 @@ addon.dungeon = {
 		--[1254400] = "Windrunner\nSpire",
 		--[1254563] = "Nexus Point\nXenas",
 		--[1254559] = "Maisara\nCaverns",
+		--[] = "Murder Row",
+		--[] = "Den of\nNalorakk",
+		--[] = "The Blinding\nVale",
+		--[] = "Voidscar\nArena",
 	},
 	[8] ={ -- Current Season
 		[393273] = "Algeth'ar\nAcademy",

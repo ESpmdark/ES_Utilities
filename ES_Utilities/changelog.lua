@@ -1,6 +1,10 @@
 local _, addon = ...
 
 local changelog = {
+    [32] = [=[
+# 2.2.6
+- Update TOC for 12.0.5
+    ]=],
     [31] = [=[
 # 2.2.5
 - Minor settings fix to accomidate the random option.
