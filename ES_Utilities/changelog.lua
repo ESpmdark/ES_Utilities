@@ -1,6 +1,10 @@
 local _, addon = ...
 
 local changelog = {
+    [33] = [=[
+# 2.2.7
+- Fixed an error when importing builds to a specialization that hasn't been activated yet.
+    ]=],
     [32] = [=[
 # 2.2.6
 - Update TOC for 12.0.5

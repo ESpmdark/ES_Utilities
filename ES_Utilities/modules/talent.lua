@@ -176,6 +176,7 @@ function ES_Utilities_TalentSaveDialog(name,import)
 		local specID = verifyImportStream(importStream, true)
 		if not specID then return false end
 		if tonumber(specID) and not (specID == spec) then
+			if not ESUTIL_DB.talentbuilds[specID] then ESUTIL_DB.talentbuilds[specID] = {} end
 			local _, specName, _, _, _, _, className = GetSpecializationInfoByID(specID)
 			otherSpec = '|cff00b4ffES_Utilities: |rSaved "' .. name .. '" for a different specialization (' .. specName .. '-' .. className .. ').'
 			spec = specID
