@@ -1,6 +1,10 @@
 local _, addon = ...
 
 local changelog = {
+    [34] = [=[
+# 2.2.8
+- Fix spellId for Skyreach teleport. WoW is using the old ID rather than the new one.
+    ]=],
     [33] = [=[
 # 2.2.7
 - Fixed an error when importing builds to a specialization that hasn't been activated yet.

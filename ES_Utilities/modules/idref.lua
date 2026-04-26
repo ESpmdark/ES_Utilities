@@ -261,7 +261,7 @@ addon.dungeon = {
 		[159901] = "The\nEverbloom",
 		[410080] = "Vortex\nPinnacle",
 		--[1254555] = "Pit of\nSaron",
-		--[1254557] = "Skyreach", -- 159898 is the original ID from WOD
+		--[159898] = "Skyreach", -- 159898 is the original ID from WOD, 1254557 was the new ID but unused?
 	},
 	[2] = { -- Legion
 		[424153] = "Black Rook\nHold",
@@ -330,7 +330,7 @@ addon.dungeon = {
 	[8] ={ -- Current Season
 		[393273] = "Algeth'ar\nAcademy",
 		[1254551] = " Seat of the\nTriumvirate",
-		[1254557] = "Skyreach",
+		[159898] = "Skyreach",
 		[1254555] = "Pit of\nSaron",
 		[1254572] = "Magister's\nTerrace",
 		[1254400] = "Windrunner\nSpire",
