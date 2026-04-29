@@ -1,6 +1,10 @@
 local _, addon = ...
 
 local changelog = {
+    [35] = [=[
+# 2.2.9
+- Fix for collected module checking invalid items like currencies from vendors.
+    ]=],
     [34] = [=[
 # 2.2.8
 - Fix spellId for Skyreach teleport. WoW is using the old ID rather than the new one.

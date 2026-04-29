@@ -109,7 +109,7 @@ function ESCmixin:UpdateMerchantBtn(i,padding,check)
 end
 
 function ESCmixin:IsItemCollected(itemID, link)
-    if not itemID then return false, false end
+    if not itemID then return "hide", false end
     local setID = C_Item.GetItemLearnTransmogSet(itemID)
     if setID then -- tmog set/ensemble/arsenal
         return self:GetSetCollection(setID)
