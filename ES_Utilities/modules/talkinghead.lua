@@ -17,11 +17,11 @@ local whitelist = { -- Warmode Airdrops
 		"I see some valuable resources in the area!",
 		"There's a cache of resources nearby.",
 	},
-	["Vidious"] ={ -- Midnight
+	["Vidious"] = { -- Midnight
 		"You like goods don't you? Then find them.",
 		"Keep an eye out for opportunities for loot when they arise, like now!",
 	},
-	["Ziadan"] ={ -- Midnight
+	["Ziadan"] = { -- Midnight
 		"Take the early advantage and get your spoils.",
 		"That looks like a treasure out in the distance. Don't miss this opportunity",
 	},
