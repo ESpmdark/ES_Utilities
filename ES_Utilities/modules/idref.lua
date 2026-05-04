@@ -404,6 +404,7 @@ local list = { -- Toys to check and add for HS override setting
 	[184353] = "Kyrian Hearthstone",
 	[257736] = "Lightcalled Hearthstone",
 	[165669] = "Lunar Elder's Hearthstone",
+	[263489] = "Naaru's Enfold",
 	[182773] = "Necrolord Hearthstone",
 	[180290] = "Night Fae Hearthstone",
 	[165802] = "Noble Gardener's Hearthstone",
