@@ -1,6 +1,11 @@
 local _, addon = ...
 
 local changelog = {
+    [36] = [=[
+# 2.2.10
+- Add toy from TBC Heroic Edition: Naaru's Enfold.
+- Check for secret values before trying to set travel cooldowns.
+    ]=],
     [35] = [=[
 # 2.2.9
 - Fix for collected module checking invalid items like currencies from vendors.

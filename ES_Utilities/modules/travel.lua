@@ -223,16 +223,19 @@ local function updateCooldowns(frame)
 			if f.type == "spell" and f.id then
 				local cdLP = C_Spell.GetSpellCooldown(f.id)
 				local start, dur = cdLP.startTime, cdLP.duration
+				if issecretvalue(start) then return end
 				if start and start > 0 then
 					f.cd:SetCooldown(start, dur)
 				end
 			elseif f.type == "item" then
 				local start, dur, _ = C_Container.GetItemCooldown(f.id)
+				if issecretvalue(start) then return end
 				if start and start > 0 then
 					f.cd:SetCooldown(start, dur)
 				end
 			elseif f.type == "toy" then
 				local start, dur, _ = C_Container.GetItemCooldown(f.id)
+				if issecretvalue(start) then return end
 				if start and start > 0 then
 					f.cd:SetCooldown(start, dur)
 				end
