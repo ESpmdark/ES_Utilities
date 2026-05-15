@@ -48,8 +48,8 @@ local description = {
             },
 	        [2] = {
                 key = "talkingheadwarmode",
-                text = "Whitelist airdrops",
-                tt = "Will allow the frame to play if it is notifying an incoming warmode airdrop.",
+                text = "Warmode airdrop warning",
+                tt = "Show a custom popup if the hidden frame was notifying an incoming warmode airdrop.",
             },
         },
     },

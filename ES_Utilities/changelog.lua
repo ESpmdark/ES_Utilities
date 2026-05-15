@@ -1,6 +1,14 @@
 local _, addon = ...
 
 local changelog = {
+    [37] = [=[
+# 2.3.0
+- Talking head frame is now replaced by a custom warning system for warmode airdrop, rather than whitelisting.
+* Custom popup frame (Lasts 5 seconds).
+* Plays warning sound.
+* Flashes taskbar if user is tabbed out.
+* Prints a message in chat.
+    ]=],
     [36] = [=[
 # 2.2.10
 - Add toy from TBC Heroic Edition: Naaru's Enfold.

@@ -1,5 +1,10 @@
 local _, addon = ...
-local isInitiated,isEnabled
+local isInitiated,isEnabled,popup
+local texture = {
+	["Horde"] = "pvpqueue-chest-horde-collect",
+	["Alliance"] = "pvpqueue-chest-alliance-collect",
+	["Neutral"] = "mythicplus-chest-silver"
+}
 
 local whitelist = { -- Warmode Airdrops
 	["Grand Marshal Tremblade"] = { -- Nazjatar (BfA)
@@ -20,13 +25,31 @@ local whitelist = { -- Warmode Airdrops
 	["Vidious"] = { -- Midnight
 		"You like goods don't you? Then find them.",
 		"Keep an eye out for opportunities for loot when they arise, like now!",
+		"Standing around? And I thought the Alliance were fighters! Show me I was right.", -- possible allianse version
 	},
 	["Ziadan"] = { -- Midnight
 		"Take the early advantage and get your spoils.",
 		"That looks like a treasure out in the distance. Don't miss this opportunity",
+		"Has the Horde grown weak or do you no longer want treasure? Go find it.", -- Slayers Rise airdrop only?
 	},
 }
+
 local function talkingHeadInit()
+	local englishFaction = UnitFactionGroup("player")
+	local chestAtlas = texture[englishFaction] or texture["Neutral"]
+	local size = texture[englishFaction] and 140 or 80
+	popup = CreateFrame("Frame", "ES_Utilities_Airdrop", UIParent, "TooltipBackdropTemplate")
+	popup:SetPoint("CENTER", UIParent, "CENTER", 0, 200)
+	popup:SetSize(180,110)
+	local icon = popup:CreateTexture(nil, "ARTWORK")
+	icon:SetSize(size,size)
+	icon:SetPoint("CENTER", popup, "TOP", 0, -40)
+	icon:SetAtlas(chestAtlas)
+	local text = popup:CreateFontString(nil, "OVERLAY")
+	text:SetPoint("BOTTOM", 0, 10)
+	text:SetFont("Fonts\\MORPHEUS.ttf", 20, "OUTLINE")
+	text:SetText("Incoming airdrop!")
+	popup:Hide()
 	hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
 		if not isEnabled then return end
 		local _, _, _, _, _, _, name, text = C_TalkingHead.GetCurrentLineInfo();
@@ -34,6 +57,16 @@ local function talkingHeadInit()
 		if ESUTIL_DB.toggles.talkingheadwarmode and whitelist[name] then
 			for _,line in ipairs(whitelist[name]) do
 				if string.match(text, line) then
+					if popup.activeTimer then return end
+					self:CloseImmediately()
+            		popup:Show()
+					PlaySoundFile("Interface\\AddOns\\ES_Utilities\\Media\\airdrop.ogg", "Master")
+					FlashClientIcon()
+            		popup.activeTimer = C_Timer.After(5, function()
+                		popup:Hide()
+                		popup.activeTimer = nil
+						print('\n      Incoming Airdrop!\n\n')
+            		end)
 					return
 				end
 			end
