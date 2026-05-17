@@ -1,5 +1,7 @@
 local _, addon = ...
-local isInitiated,isEnabled,popup
+local isInitiated,isEnabled,popup,pendingClose
+local EL = CreateFrame("Frame")
+
 local texture = {
 	["Horde"] = "pvpqueue-chest-horde-collect",
 	["Alliance"] = "pvpqueue-chest-alliance-collect",
@@ -34,6 +36,29 @@ local whitelist = { -- Warmode Airdrops
 	},
 }
 
+EL:SetScript("OnEvent", function(self, event, text, name, ...)
+	if not isEnabled or not ESUTIL_DB.toggles.talkingheadwarmode then return end
+	if not (text and name and tostring(text) and tostring(name)) then return end
+	if whitelist[name] then
+		for _,line in ipairs(whitelist[name]) do
+			if string.find(text, line, 1, true) then
+				if popup.activeTimer then return end
+				pendingClose = true
+           		popup:Show()
+				PlaySoundFile("Interface\\AddOns\\ES_Utilities\\Media\\airdrop.ogg", "Master")
+				FlashClientIcon()
+           		popup.activeTimer = C_Timer.After(5, function()
+               		popup:Hide()
+               		popup.activeTimer = nil
+					pendingClose = nil
+					print('\n      Incoming Airdrop!\n\n')
+           		end)
+				return
+			end
+		end
+	end
+end)
+
 local function talkingHeadInit()
 	local englishFaction = UnitFactionGroup("player")
 	local chestAtlas = texture[englishFaction] or texture["Neutral"]
@@ -52,31 +77,17 @@ local function talkingHeadInit()
 	popup:Hide()
 	hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
 		if not isEnabled then return end
-		local _, _, _, _, _, _, name, text = C_TalkingHead.GetCurrentLineInfo();
-		if not text then return end
-		if ESUTIL_DB.toggles.talkingheadwarmode and whitelist[name] then
-			for _,line in ipairs(whitelist[name]) do
-				if string.match(text, line) then
-					if popup.activeTimer then return end
-					self:CloseImmediately()
-            		popup:Show()
-					PlaySoundFile("Interface\\AddOns\\ES_Utilities\\Media\\airdrop.ogg", "Master")
-					FlashClientIcon()
-            		popup.activeTimer = C_Timer.After(5, function()
-                		popup:Hide()
-                		popup.activeTimer = nil
-						print('\n      Incoming Airdrop!\n\n')
-            		end)
-					return
-				end
-			end
-		end
 		if ESUTIL_DB.toggles.talkingheadsound then
-			self:Hide()
+			if pendingClose then
+				self:CloseImmediately()
+			else
+				self:Hide()
+			end
 		else
 			self:CloseImmediately()
 		end
 	end)
+	EL:RegisterEvent("CHAT_MSG_MONSTER_SAY")
 end
 
 addon.toggleTalkingHead = function(enable)

@@ -1,6 +1,10 @@
 local _, addon = ...
 
 local changelog = {
+    [38] = [=[
+# 2.3.1
+- Improvements to warmode airdrop detection.
+    ]=],
     [37] = [=[
 # 2.3.0
 - Talking head frame is now replaced by a custom warning system for warmode airdrop, rather than whitelisting.
