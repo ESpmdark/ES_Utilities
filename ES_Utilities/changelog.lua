@@ -1,6 +1,11 @@
 local _, addon = ...
 
 local changelog = {
+    [39] = [=[
+# 2.3.2
+- Slayer's Rise battle chests now gets pointed out instead of sharing the generic airdrop warning.
+* Note, contains too many unverified voicelines that will be cleared up in future versions.
+    ]=],
     [38] = [=[
 # 2.3.1
 - Improvements to warmode airdrop detection.

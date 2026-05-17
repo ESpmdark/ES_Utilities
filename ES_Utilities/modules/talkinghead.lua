@@ -27,14 +27,47 @@ local whitelist = { -- Warmode Airdrops
 	["Vidious"] = { -- Midnight
 		"You like goods don't you? Then find them.",
 		"Keep an eye out for opportunities for loot when they arise, like now!",
-		"Standing around? And I thought the Alliance were fighters! Show me I was right.", -- possible allianse version
 	},
 	["Ziadan"] = { -- Midnight
 		"Take the early advantage and get your spoils.",
 		"That looks like a treasure out in the distance. Don't miss this opportunity",
-		"Has the Horde grown weak or do you no longer want treasure? Go find it.", -- Slayers Rise airdrop only?
 	},
 }
+local spectral = { -- Slayer's Rise, Spectral Battle Chest
+	["Vidious"] = {
+		"Standing around? And I thought the Alliance were fighters! Show me I was right.",
+		"Huh what's happening? Something big it seems.", -- unverified
+		"This isn't the first time you've faced the Horde. Show why the Alliance is my chosen faction!", --unverified
+		"What is that odor? Go see what that's about.", -- unverified
+	},
+	["Ziadan"] = {
+		"Has the Horde grown weak or do you no longer want treasure? Go find it.",
+		"There are rumblings I can sense coming. Go explore Slayer's Rise and see what they are.", --unverified
+	},
+}
+
+local function runAlert(msg,col)
+	if popup.activeTimer then
+		print('|cffff00ffAdditional: |r'..msg) -- Just incase spectral and airdrop spawn during the same 5 seconds.
+		return
+	end
+	local c = {
+		[1] = {r=1,g=1,b=.4},
+		[2] = {r=.8,g=.3,b=1}
+	}
+	pendingClose = true
+	popup.text:SetTextColor(c[col].r,c[col].g,c[col].b,1)
+	popup.text:SetText(msg)
+	popup:Show()
+	PlaySoundFile("Interface\\AddOns\\ES_Utilities\\Media\\airdrop.ogg", "Master")
+	FlashClientIcon()
+	popup.activeTimer = C_Timer.After(5, function()
+		popup:Hide()
+		popup.activeTimer = nil
+		pendingClose = nil
+		print('\n      '..msg..'\n\n')
+	end)
+end
 
 EL:SetScript("OnEvent", function(self, event, text, name, ...)
 	if not isEnabled or not ESUTIL_DB.toggles.talkingheadwarmode then return end
@@ -42,17 +75,15 @@ EL:SetScript("OnEvent", function(self, event, text, name, ...)
 	if whitelist[name] then
 		for _,line in ipairs(whitelist[name]) do
 			if string.find(text, line, 1, true) then
-				if popup.activeTimer then return end
-				pendingClose = true
-           		popup:Show()
-				PlaySoundFile("Interface\\AddOns\\ES_Utilities\\Media\\airdrop.ogg", "Master")
-				FlashClientIcon()
-           		popup.activeTimer = C_Timer.After(5, function()
-               		popup:Hide()
-               		popup.activeTimer = nil
-					pendingClose = nil
-					print('\n      Incoming Airdrop!\n\n')
-           		end)
+				runAlert('Incoming Airdrop!',1)
+				return
+			end
+		end
+	end
+	if spectral[name] then
+		for _,line in ipairs(spectral[name]) do
+			if string.find(text, line, 1, true) then
+				runAlert('FFA Battle Chest!',2)
 				return
 			end
 		end
@@ -70,10 +101,10 @@ local function talkingHeadInit()
 	icon:SetSize(size,size)
 	icon:SetPoint("CENTER", popup, "TOP", 0, -40)
 	icon:SetAtlas(chestAtlas)
-	local text = popup:CreateFontString(nil, "OVERLAY")
-	text:SetPoint("BOTTOM", 0, 10)
-	text:SetFont("Fonts\\MORPHEUS.ttf", 20, "OUTLINE")
-	text:SetText("Incoming airdrop!")
+	popup.text = popup:CreateFontString(nil, "OVERLAY")
+	popup.text:SetPoint("BOTTOM", 0, 10)
+	popup.text:SetFont("Fonts\\MORPHEUS.ttf", 20, "OUTLINE")
+	popup.text:SetJustifyH("CENTER")
 	popup:Hide()
 	hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
 		if not isEnabled then return end
