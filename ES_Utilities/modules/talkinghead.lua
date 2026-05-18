@@ -45,7 +45,7 @@ local spectral = { -- Slayer's Rise, Spectral Battle Chest
 }
 
 local function runAlert(msg,col)
-	if popup.activeTimer then
+	if pendingClose then
 		print('|cffff00ffAdditional: |r'..msg) -- Just incase spectral and airdrop spawn during the same 5 seconds.
 		return
 	end
@@ -59,9 +59,8 @@ local function runAlert(msg,col)
 	popup:Show()
 	PlaySoundFile("Interface\\AddOns\\ES_Utilities\\Media\\airdrop.ogg", "Master")
 	FlashClientIcon()
-	popup.activeTimer = C_Timer.After(5, function()
+	C_Timer.After(5, function()
 		popup:Hide()
-		popup.activeTimer = nil
 		pendingClose = nil
 		print('\n      '..msg..'\n\n')
 	end)
