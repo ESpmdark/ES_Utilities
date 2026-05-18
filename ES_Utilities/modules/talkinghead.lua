@@ -8,7 +8,7 @@ local texture = {
 	["Neutral"] = "mythicplus-chest-silver"
 }
 
-local whitelist = { -- Warmode Airdrops
+local airdrops = { -- Warmode Airdrops
 	["Grand Marshal Tremblade"] = { -- Nazjatar (BfA)
 		"Incoming supplies!"
 	},
@@ -36,13 +36,11 @@ local whitelist = { -- Warmode Airdrops
 local spectral = { -- Slayer's Rise, Spectral Battle Chest
 	["Vidious"] = {
 		"Standing around? And I thought the Alliance were fighters! Show me I was right.",
-		"Huh what's happening? Something big it seems.", -- unverified
-		"This isn't the first time you've faced the Horde. Show why the Alliance is my chosen faction!", --unverified
-		"What is that odor? Go see what that's about.", -- unverified
+		"Huh what's happening? Something big it seems.",
 	},
 	["Ziadan"] = {
 		"Has the Horde grown weak or do you no longer want treasure? Go find it.",
-		"There are rumblings I can sense coming. Go explore Slayer's Rise and see what they are.", --unverified
+		"There are rumblings I can sense coming. Go explore Slayer's Rise and see what they are.",
 	},
 }
 
@@ -72,8 +70,8 @@ end
 EL:SetScript("OnEvent", function(self, event, text, name, ...)
 	if not isEnabled or not ESUTIL_DB.toggles.talkingheadwarmode then return end
 	if not (text and name and tostring(text) and tostring(name)) then return end
-	if whitelist[name] then
-		for _,line in ipairs(whitelist[name]) do
+	if airdrops[name] then
+		for _,line in ipairs(airdrops[name]) do
 			if string.find(text, line, 1, true) then
 				runAlert('Incoming Airdrop!',1)
 				return
