@@ -2,7 +2,7 @@ local _, addon = ...
 
 local changelog = {
     [40] = [=[
-# 2.3.2
+# 2.3.3
 - Cleanup of battle chest NPC-phrases. Was wrong and/or tied to world quests.
     ]=],
     [39] = [=[
