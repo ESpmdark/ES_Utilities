@@ -1,6 +1,11 @@
 local _, addon = ...
 
 local changelog = {
+    [42] = [=[
+# 2.3.5
+- Fix a secret value issue.
+- Airdrop now prints to chat when frame is shown, rather than when hiding.
+    ]=],
     [41] = [=[
 # 2.3.4
 - More cleanup.

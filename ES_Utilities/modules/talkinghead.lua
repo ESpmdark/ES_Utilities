@@ -54,6 +54,7 @@ local function runAlert(msg,col)
 		[2] = {r=.8,g=.3,b=1}
 	}
 	pendingClose = true
+	print('\n      '..msg..'\n\n')
 	popup.text:SetTextColor(c[col].r,c[col].g,c[col].b,1)
 	popup.text:SetText(msg)
 	popup:Show()
@@ -62,12 +63,12 @@ local function runAlert(msg,col)
 	C_Timer.After(5, function()
 		popup:Hide()
 		pendingClose = nil
-		print('\n      '..msg..'\n\n')
 	end)
 end
 
 EL:SetScript("OnEvent", function(self, event, text, name, ...)
 	if not isEnabled or not ESUTIL_DB.toggles.talkingheadwarmode then return end
+	if issecretvalue(text) or issecretvalue(name) then return end
 	if not (text and name and tostring(text) and tostring(name)) then return end
 	if airdrops[name] then
 		for _,line in ipairs(airdrops[name]) do
