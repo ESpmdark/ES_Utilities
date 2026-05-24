@@ -96,6 +96,13 @@ addon.titles = { -- [itemID] = titleId
 }
 
 addon.factionIDs = {
+	-- Midnight
+	2699, -- The Singularity
+	2710, -- Silvermoon Court
+	2770, -- Slayer's Duellum
+	2704, -- Hara'ti
+	2696, -- Amani Tribe
+
 	-- The War Within
 	2590, -- Council of Dornogal
 	2570, -- Hallowfall Arathi

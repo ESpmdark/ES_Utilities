@@ -1,6 +1,12 @@
 local _, addon = ...
 
 local changelog = {
+    [43] = [=[
+# 2.3.6
+- Added midnight factionId's for the paragon reward check.
+- DrinkMacro now defaults to using Recuperate if no items were found in bags.
+* This change is intended to give non-healers a use for this macro.
+    ]=],
     [42] = [=[
 # 2.3.5
 - Fix a secret value issue.

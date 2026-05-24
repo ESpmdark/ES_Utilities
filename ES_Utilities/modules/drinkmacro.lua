@@ -20,7 +20,7 @@ addon.updateDrinkMacro = function()
 	local actualIndex = GetMacroIndexByName(ESUTIL_DB.drinkmacro.name)
 	if actualIndex and actualIndex ~= 0 then
 		local macro = "#showtooltip\n"
-		local item = ""
+		local item = "/use Recuperate"
 		local mf = ESDM_ItemCheck(addon.items.magefood)
 		if mf then
 			item = mf
