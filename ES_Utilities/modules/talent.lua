@@ -32,6 +32,7 @@ local function updateSpecBorder()
 	for i=1,4 do
 		ES_Utilities_TalentMain["Spec" .. i].Ring:SetAtlas("talents-node-circle-gray")
 	end
+	if currSpec() == 5 then return end -- Not yet selected a specialization
 	ES_Utilities_TalentMain["Spec" .. currSpec()].Ring:SetAtlas("talents-node-circle-yellow")
 end
 
