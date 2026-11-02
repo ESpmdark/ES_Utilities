@@ -190,12 +190,12 @@ addon.items = { -- Items to find through bagcheck function
 }
 
 addon.currencies = {
-	[1] = 3378, -- Catalyst
-	[2] = 3383, -- Adventurer
-	[3] = 3341, -- Veteran
-	[4] = 3343, -- Champion
-	[5] = 3345, -- Hero
-	[6] = 3347 -- Myth
+	[1] = 3465, -- Catalyst
+	[2] = 3442, -- Adventurer
+	[3] = 3443, -- Veteran
+	[4] = 3444, -- Champion
+	[5] = 3445, -- Hero
+	[6] = 3446 -- Myth
 }
 
 local factionlookup = {
@@ -267,8 +267,8 @@ addon.dungeon = {
 		[424142] = "Throne of\nthe Tides",
 		[159901] = "The\nEverbloom",
 		[410080] = "Vortex\nPinnacle",
-		--[1254555] = "Pit of\nSaron",
-		--[159898] = "Skyreach", -- 159898 is the original ID from WOD, 1254557 was the new ID but unused?
+		[1254555] = "Pit of\nSaron",
+		[159898] = "Skyreach", -- 159898 is the original ID from WOD, 1254557 was the new ID but unused?
 	},
 	[2] = { -- Legion
 		[424153] = "Black Rook\nHold",
@@ -277,9 +277,11 @@ addon.dungeon = {
 		[393764] = "Halls of\nValor",
 		[410078] = "Neltharion's\nLair",
 		[373262] = "Karazhan",
-		--[1254551] = " Seat of the\nTriumvirate",
+		[1254551] = " Seat of the\nTriumvirate",
 	},
 	[3] = { -- Battle for Azeroth
+		--[1286831] = "King's\nRest",
+		--[1286828] = "Temple of\nSethraliss",
 		[424187] = "Atal Dazar",
 		[410071] = "Freehold",
 		[373274] = "Operation:\nMechagon",
@@ -302,11 +304,11 @@ addon.dungeon = {
 		[367416] = "Tazavesh",
 	},
 	[5] = { -- Dragonflight
-		--[393273] = "Algeth'ar\nAcademy",
+		[393273] = "Algeth'ar\nAcademy",
 		[393267] = "Brackenhide\nHollow",
 		[393283] = "Halls of\nInfusion",
 		[393276] = "Neltharus",
-		[393256] = "Ruby\nLife Pools",
+		--[393256] = "Ruby\nLife Pools",
 		[393279] = "Azure Vault",
 		[393262] = "Nokhud\nOffensive",
 		[393222] = "Uldaman:LoT",
@@ -325,24 +327,25 @@ addon.dungeon = {
 		[1237215] = "Eco-Dome\nAl'dani",
 	},
 	[7] = { -- Midnight
-		--[1254572] = "Magister's\nTerrace",
-		--[1254400] = "Windrunner\nSpire",
-		--[1254563] = "Nexus Point\nXenas",
-		--[1254559] = "Maisara\nCaverns",
-		--[] = "Murder Row",
-		--[] = "Den of\nNalorakk",
-		--[] = "The Blinding\nVale",
-		--[] = "Voidscar\nArena",
-	},
-	[8] ={ -- Current Season
-		[393273] = "Algeth'ar\nAcademy",
-		[1254551] = " Seat of the\nTriumvirate",
-		[159898] = "Skyreach",
-		[1254555] = "Pit of\nSaron",
 		[1254572] = "Magister's\nTerrace",
 		[1254400] = "Windrunner\nSpire",
 		[1254563] = "Nexus Point\nXenas",
 		[1254559] = "Maisara\nCaverns",
+		--[1286809] = "Murder Row",
+		--[1286807] = "Den of\nNalorakk",
+		--[1286801] = "The\nBlinding\nVale",
+		--[1286804] = "Voidscar\nArena",
+		--[1286812] = "Altar of\nFangs",
+	},
+	[8] ={ -- Current Season
+		[1286831] = "King's\nRest",
+		[1286828] = "Temple of\nSethraliss",
+		[393256] = "Ruby\nLife Pools",
+		[1286809] = "Murder Row",
+		[1286807] = "Den of\nNalorakk",
+		[1286801] = "The\nBlinding\nVale",
+		[1286804] = "Voidscar\nArena",
+		[1286812] = "Altar of\nFangs",
 	},
 }
 
@@ -407,10 +410,12 @@ local list = { -- Toys to check and add for HS override setting
 	[162973] = "Greatfather Winter's Hearthstone",
 	[163045] = "Headless Horseman's Hearthstone",
 	[209035] = "Hearthstone of the Flame",
+	[281136] = "Hiveborne Hearthstone",
 	[168907] = "Holographic Digitalization Hearthstone",
 	[184353] = "Kyrian Hearthstone",
 	[257736] = "Lightcalled Hearthstone",
 	[165669] = "Lunar Elder's Hearthstone",
+	[264367] = "Mycomancer's Hearthspore",
 	[263489] = "Naaru's Enfold",
 	[182773] = "Necrolord Hearthstone",
 	[180290] = "Night Fae Hearthstone",
@@ -422,6 +427,7 @@ local list = { -- Toys to check and add for HS override setting
 	[165670] = "Peddlefeet's Lovely Hearthstone",
 	[263933] = "Preyseeker's Hearthstone",
 	[235016] = "Redeployment Module",
+	[281615] = "Shadeweaver's Hearthstone",
 	[212337] = "Stone of the Hearth",
 	[64488] = "The Innkeeper's Daughter",
 	[193588] = "Timewalker's Hearthstone",
