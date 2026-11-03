@@ -1,6 +1,14 @@
 local _, addon = ...
 
 local changelog = {
+    [44] = [=[
+# 2.3.7
+- Update TOC.
+- Fixed a bug with low level characters that have gained access to the talent frame, yet has no active specialization selected.
+- Update dungeon teleports for the new season.
+- Added 3 new Hearthstone toys.
+- Update the upgrade currency ID's.
+    ]=],
     [43] = [=[
 # 2.3.6
 - Added midnight factionId's for the paragon reward check.
